@@ -13,10 +13,12 @@ namespace Employment.Services.Api.Controllers
     {
         private readonly ICollection<string> _errors = new List<string>();
         protected readonly IMapper _mapper;
-
-        public ApiController(IMapper _mapper)
+        protected readonly ILogger _logger;
+        
+        public ApiController(IMapper _mapper, ILogger logger)
         {
             this._mapper = _mapper;
+            this._logger = logger;
         }
         protected ActionResult CustomResponse(object result = null)
         {

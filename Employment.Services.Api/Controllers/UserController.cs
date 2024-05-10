@@ -16,13 +16,11 @@ namespace Employment.Services.Api.Controllers
     public class UserController : ApiController
     {
         private readonly IUserService _userService;
-		private readonly ILogger<UserController> _logger;
-
-		public UserController(IUserService userService, ILogger<UserController> logger)
+		
+		public UserController(IUserService userService, IMapper mapper,ILogger<UserController> logger) 
+            : base(mapper,logger)
         {
             _userService = userService;
-			_logger = logger;
-
 		}
 
         [AllowAnonymous]
@@ -30,7 +28,7 @@ namespace Employment.Services.Api.Controllers
         public async Task<IEnumerable<UserDto>> Get()
         {
             _logger.LogInformation("Begin GetAll users API");
-
+           
             return await _userService.GetAll();
 
 		}
@@ -39,7 +37,7 @@ namespace Employment.Services.Api.Controllers
         [HttpGet("GetUserById")]
         public async Task<UserDto> Get(Guid id)
         {
-			_logger.LogInformation("Begin GetUserById API");
+            _logger.LogInformation("Begin GetUserById API");
 
 			return await _userService.GetById(id);
         }
@@ -48,7 +46,7 @@ namespace Employment.Services.Api.Controllers
         [HttpPost("RegisterUser")]
         public async Task<IActionResult> Post([FromBody]UserDto customerViewModel)
         {
-			_logger.LogInformation("Begin RegisterUser API");
+            _logger.LogInformation("Begin RegisterUser API");
 
 			return !ModelState.IsValid ? CustomResponse(ModelState) : CustomResponse(await _userService.Register(customerViewModel));
         }
@@ -57,7 +55,7 @@ namespace Employment.Services.Api.Controllers
         [HttpPut("UpdateUser")]
         public async Task<IActionResult> Put([FromBody]UserDto customerViewModel)
         {
-			_logger.LogInformation("Begin UpdateUser API");
+            _logger.LogInformation("Begin UpdateUser API");
 
 			return !ModelState.IsValid ? CustomResponse(ModelState) : CustomResponse(await _userService.Update(customerViewModel));
         }
@@ -66,7 +64,7 @@ namespace Employment.Services.Api.Controllers
         [HttpDelete("RemoveUser")]
         public async Task<IActionResult> Delete(Guid id)
         {
-			_logger.LogInformation("Begin RemoveUser API");
+            _logger.LogInformation("Begin RemoveUser API");
 
 			return CustomResponse(await _userService.Remove(id));
         }

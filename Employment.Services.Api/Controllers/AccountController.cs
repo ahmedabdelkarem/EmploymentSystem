@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using NetDevPack.Identity.Jwt;
 using NetDevPack.Identity.Model;
+using static StackExchange.Redis.Role;
 
 namespace Employment.Services.Api.Controllers
 {
@@ -15,19 +16,18 @@ namespace Employment.Services.Api.Controllers
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly AppJwtSettings _appJwtSettings;
-		private readonly ILogger<UserController> _logger;
-
-		public AccountController(
+        protected readonly IMapper mapper;
+        protected readonly ILogger<UserController> logger;
+        public AccountController(
             SignInManager<IdentityUser> signInManager,
             UserManager<IdentityUser> userManager,
             IOptions<AppJwtSettings> appJwtSettings,
-			ILogger<UserController> logger
-			)
+            IMapper mapper, ILogger<UserController> logger
+            ) : base(mapper, logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _appJwtSettings = appJwtSettings.Value;
-			_logger = logger;
 
 		}
 
