@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Hosting;
 using Serilog;
 using Employment.Application.IServices;
 using Employment.Application.Services;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -58,8 +59,17 @@ Log.Logger = new LoggerConfiguration()
 	.CreateLogger();
 builder.Host.UseSerilog();
 
+//Redis Cache
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+	options.Configuration = "redis-13259.c74.us-east-1-4.ec2.redns.redis-cloud.com:13259"; // Change to your Redis server configuration
+	options.InstanceName = "SampleInstance"; // Change to a meaningful instance name
+});
+
+
 //Services
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ICacheService, CacheService>();
 // Infra - Data
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IdentityEmploymentContext>();
