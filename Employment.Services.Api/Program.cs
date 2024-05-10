@@ -1,11 +1,5 @@
-using Employment.Application.Interfaces;
-using Employment.Domain.Commands;
-using Employment.Domain.Core.Events;
-using Employment.Domain.Events;
-using Employment.Domain.Interfaces;
+
 using Employment.Infra.Data.Context;
-using Employment.Infra.Data.EventSourcing;
-using Employment.Infra.Data.Repository.EventSourcing;
 using Employment.Infra.Data.Repository;
 using Employment.Services.Api.Configurations;
 using MediatR;
@@ -17,8 +11,11 @@ using NetDevPack.Identity;
 using NetDevPack.Identity.Jwt;
 using Microsoft.EntityFrameworkCore;
 using MassTransit;
+using Microsoft.AspNetCore.Identity;
+using Employment.Domain.IRepository;
 
 var builder = WebApplication.CreateBuilder(args);
+
 
 // Add services to the container.
 
@@ -52,20 +49,13 @@ builder.Services.AddSwaggerConfiguration();
 
 // Application
 
-// Domain - Events
-builder.Services.AddScoped<INotificationHandler<CustomerRegisteredEvent>, CustomerEventHandler>();
-builder.Services.AddScoped<INotificationHandler<CustomerUpdatedEvent>, CustomerEventHandler>();
-builder.Services.AddScoped<INotificationHandler<CustomerRemovedEvent>, CustomerEventHandler>();
 
 
 // Infra - Data
-builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
-builder.Services.AddScoped<EmploymentContext>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IdentityEmploymentContext>();
 
-// Infra - Data EventSourcing
-builder.Services.AddScoped<IEventStoreRepository, EventStoreSqlRepository>();
-builder.Services.AddScoped<IEventStore, SqlEventStore>();
-builder.Services.AddScoped<EventStoreSqlContext>();
+
 
 var app = builder.Build();  
 

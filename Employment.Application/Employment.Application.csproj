@@ -15,8 +15,4 @@
     <ProjectReference Include="..\Employment.Infra.Data\Employment.Infra.Data.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
-
 </Project>

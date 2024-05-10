@@ -7,7 +7,7 @@ using Employment.Infra.Data.Context;
 
 namespace Employment.Infra.Data.Migrations
 {
-    [DbContext(typeof(EmploymentContext))]
+    [DbContext(typeof(IdentityEmploymentContext))]
     [Migration("20161213130431_Initial")]
     partial class Initial
     {

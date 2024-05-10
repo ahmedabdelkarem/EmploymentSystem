@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Employment.Services.Api.Controllers
 {
+    [Route("api/[controller]")]
     [ApiController]
     public abstract class ApiController : ControllerBase
     {
