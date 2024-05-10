@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Employment.Domain.Entities;
-using Employment.Infra.Data;
+
 using NetDevPack.Data;
 
 namespace Employment.Domain.IRepository

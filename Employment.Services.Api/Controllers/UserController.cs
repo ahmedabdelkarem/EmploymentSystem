@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
 using Employment.Application.IServices;
 using Employment.Application.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -16,7 +17,7 @@ namespace Employment.Services.Api.Controllers
     {
         private readonly IUserService _userService;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, IMapper mapper) : base(mapper)
         {
             _userService = userService;
         }

@@ -9,17 +9,16 @@ using NetDevPack.Data;
 
 namespace Employment.Infra.Data.Repository
 {
-    public class UserRepository : IUserRepository
+    public class UserRepository : GenericRepository<AspNetUser> , IUserRepository
     {
-        protected readonly EmploymentContext Db;
+      //  protected readonly EmploymentContext Db;
         protected readonly DbSet<AspNetUser> DbSet;
 
-        public UserRepository(EmploymentContext context)
+        public UserRepository(EmploymentContext DBContext) : base(DBContext)
         {
-            Db = context;
-            DbSet = Db.Set<AspNetUser>();
+            DbSet = DBContext.Set<AspNetUser>();
         }
-
+      
 
         public async Task<AspNetUser> GetById(Guid id)
         {
@@ -53,7 +52,7 @@ namespace Employment.Infra.Data.Repository
 
         public void Dispose()
         {
-            Db.Dispose();
+            //Db.Dispose();
         }
     }
 }

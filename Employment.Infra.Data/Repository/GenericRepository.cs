@@ -1,0 +1,59 @@
+﻿using Employment.Domain.Entities;
+using Employment.Domain.IRepository;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Employment.Infra.Data.Repository
+{
+    public class GenericRepository<T> : IGenericRepository<T> where T : class
+    {
+        protected readonly EmploymentContext _dbContext;
+
+        public GenericRepository(EmploymentContext DBContext)
+        {
+            _dbContext = DBContext;
+
+
+        }
+        public void Dispose()
+        {
+           
+        }
+
+        public IEnumerable<T> GetAll(DbContext _context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public T GetById(DbContext _context, T id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Insert(DbContext _context, T _obj)
+        {
+            _context.Add<T>(_obj);
+            return SaveChanges(_context);
+        }
+
+        public bool Insert(DbContext _context, ref T _obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool SaveChanges(DbContext _context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Update(DbContext _context, T _obj)
+        {
+            throw new NotImplementedException();
+        }
+    }
+}

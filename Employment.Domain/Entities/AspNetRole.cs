@@ -1,5 +1,4 @@
-﻿using Employment.Infra.Data;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Employment.Domain.Entities;

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -11,7 +12,12 @@ namespace Employment.Services.Api.Controllers
     public abstract class ApiController : ControllerBase
     {
         private readonly ICollection<string> _errors = new List<string>();
+        protected readonly IMapper _mapper;
 
+        public ApiController(IMapper _mapper)
+        {
+            this._mapper = _mapper;
+        }
         protected ActionResult CustomResponse(object result = null)
         {
             if (IsOperationValid())

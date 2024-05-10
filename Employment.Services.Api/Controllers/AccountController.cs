@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -18,7 +19,8 @@ namespace Employment.Services.Api.Controllers
         public AccountController(
             SignInManager<IdentityUser> signInManager,
             UserManager<IdentityUser> userManager,
-            IOptions<AppJwtSettings> appJwtSettings)
+            IOptions<AppJwtSettings> appJwtSettings
+            , IMapper mapper) : base(mapper)
         {
             _userManager = userManager;
             _signInManager = signInManager;

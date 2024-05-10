@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Employment.Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,7 @@ namespace Employment.Domain.IRepository
 {
     public interface IVacancyRepository
     {
+ 
+        Task<IEnumerable<List<Vacancy>>> GetAllVacancies();
     }
 }

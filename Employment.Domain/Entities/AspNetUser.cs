@@ -1,35 +1,53 @@
-﻿using System;
-using Employment.Domain.Entities;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using NetDevPack.Domain;
+using System;
+using System.Collections.Generic;
 
-namespace Employment.Infra.Data
+namespace Employment.Domain.Entities;
+
+public partial class AspNetUser : IdentityUser , IAggregateRoot
 {
-    public class AspNetUser : IdentityUser , IAggregateRoot
-    {
-        public AspNetUser(string id, string name, string email, DateTime birthDate)
-        {
-            Id = id;
-            Name = name;
-            Email = email;
-            BirthDate = birthDate;
-        }
+    public string Id { get; set; }
 
-        // Empty constructor for EF
-        protected AspNetUser() { }
+    public string Name { get; set; }
 
-        public string Name { get; private set; }
+    public string Email { get; set; }
 
-        public string Email { get; private set; }
+    public DateTime BirthDate { get; set; }
 
-        public DateTime BirthDate { get; private set; }
-        public virtual ICollection<AspNetUserClaim> AspNetUserClaims { get; set; } = new List<AspNetUserClaim>();
+    public string UserName { get; set; }
 
-        public virtual ICollection<AspNetUserLogin> AspNetUserLogins { get; set; } = new List<AspNetUserLogin>();
+    public string NormalizedUserName { get; set; }
 
-        public virtual ICollection<AspNetUserToken> AspNetUserTokens { get; set; } = new List<AspNetUserToken>();
+    public string NormalizedEmail { get; set; }
 
-        public virtual ICollection<AspNetRole> Roles { get; set; } = new List<AspNetRole>();
+    public bool EmailConfirmed { get; set; }
 
-    }
+    public string PasswordHash { get; set; }
+
+    public string SecurityStamp { get; set; }
+
+    public string ConcurrencyStamp { get; set; }
+
+    public string PhoneNumber { get; set; }
+
+    public bool PhoneNumberConfirmed { get; set; }
+
+    public bool TwoFactorEnabled { get; set; }
+
+    public DateTimeOffset? LockoutEnd { get; set; }
+
+    public bool LockoutEnabled { get; set; }
+
+    public int AccessFailedCount { get; set; }
+
+    public virtual ICollection<AspNetUserClaim> AspNetUserClaims { get; set; } = new List<AspNetUserClaim>();
+
+    public virtual ICollection<AspNetUserLogin> AspNetUserLogins { get; set; } = new List<AspNetUserLogin>();
+
+    public virtual ICollection<AspNetUserToken> AspNetUserTokens { get; set; } = new List<AspNetUserToken>();
+
+    public virtual ICollection<VacanciesApplication> VacanciesApplications { get; set; } = new List<VacanciesApplication>();
+
+    public virtual ICollection<AspNetRole> Roles { get; set; } = new List<AspNetRole>();
 }
