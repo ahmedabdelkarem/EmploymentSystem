@@ -15,7 +15,7 @@ namespace Employment.Services.Api.Controllers
     public class VacancyController : ApiController
     {
         private readonly IVacancyService _vacancyService;
-        public VacancyController(IVacancyService vacancyService, IMapper mapper) : base (mapper)
+        public VacancyController(IVacancyService vacancyService) 
         {
             _vacancyService = vacancyService;
         }

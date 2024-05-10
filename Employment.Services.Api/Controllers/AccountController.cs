@@ -15,20 +15,16 @@ namespace Employment.Services.Api.Controllers
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly AppJwtSettings _appJwtSettings;
-		private readonly ILogger<UserController> _logger;
 
 		public AccountController(
             SignInManager<IdentityUser> signInManager,
             UserManager<IdentityUser> userManager,
-            IOptions<AppJwtSettings> appJwtSettings,
-			ILogger<UserController> logger
+            IOptions<AppJwtSettings> appJwtSettings
 			)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _appJwtSettings = appJwtSettings.Value;
-			_logger = logger;
-
 		}
 
 		[HttpPost]
