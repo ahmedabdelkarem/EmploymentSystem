@@ -13,6 +13,11 @@ using Microsoft.EntityFrameworkCore;
 using MassTransit;
 using Microsoft.AspNetCore.Identity;
 using Employment.Domain.IRepository;
+using Microsoft.AspNetCore.Hosting;
+using Serilog;
+using Employment.Application.IServices;
+using Employment.Application.Services;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,10 +52,24 @@ builder.Services.AddAutoMapperConfiguration();
 builder.Services.AddSwaggerConfiguration();
 
 
-// Application
+// Configure logging with Serilog
+Log.Logger = new LoggerConfiguration()
+	.WriteTo.Console()
+	.WriteTo.File("bin/log/log-.txt", rollingInterval: RollingInterval.Day)
+	.CreateLogger();
+builder.Host.UseSerilog();
+
+//Redis Cache
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+	options.Configuration = "redis-13259.c74.us-east-1-4.ec2.redns.redis-cloud.com:13259"; // Change to your Redis server configuration
+	options.InstanceName = "SampleInstance"; // Change to a meaningful instance name
+});
 
 
-
+//Services
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ICacheService, CacheService>();
 // Infra - Data
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IdentityEmploymentContext>();

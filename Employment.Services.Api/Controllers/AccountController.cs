@@ -15,25 +15,33 @@ namespace Employment.Services.Api.Controllers
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly AppJwtSettings _appJwtSettings;
+		private readonly ILogger<UserController> _logger;
 
-        public AccountController(
+		public AccountController(
             SignInManager<IdentityUser> signInManager,
             UserManager<IdentityUser> userManager,
-            IOptions<AppJwtSettings> appJwtSettings
-            , IMapper mapper) : base(mapper)
+            IOptions<AppJwtSettings> appJwtSettings,
+			ILogger<UserController> logger
+			)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _appJwtSettings = appJwtSettings.Value;
-        }
+			_logger = logger;
 
-        [HttpPost]
+		}
+
+		[HttpPost]
         [Route("register")]
         public async Task<ActionResult> Register(RegisterUser registerUser)
         {
-            if (!ModelState.IsValid) return CustomResponse(ModelState);
+			_logger.LogInformation("Begin register API");
 
-            var user = new IdentityUser
+			if (!ModelState.IsValid) return CustomResponse(ModelState);
+
+			_logger.LogInformation("ModelState is Valid");
+
+			var user = new IdentityUser
             {
                 UserName = registerUser.Email,
                 Email = registerUser.Email,
@@ -41,13 +49,17 @@ namespace Employment.Services.Api.Controllers
             };
 
             var result = await _userManager.CreateAsync(user, registerUser.Password);
+			_logger.LogInformation("After CreateAsync");
 
-            if (result.Succeeded)
+			if (result.Succeeded)
             {
-                return CustomResponse(GetFullJwt(user.Email));
-            }
+				_logger.LogInformation("result Succeeded");
 
-            foreach (var error in result.Errors)
+				return CustomResponse(GetFullJwt(user.Email));
+            }
+			_logger.LogInformation("Error count = "+ result.Errors.Count() );
+
+			foreach (var error in result.Errors)
             {
                 AddError(error.Description);
             }
@@ -59,19 +71,29 @@ namespace Employment.Services.Api.Controllers
         [Route("login")]
         public async Task<IActionResult> Login(LoginUser loginUser)
         {
-            if (!ModelState.IsValid) return CustomResponse(ModelState);
+			_logger.LogInformation("Begin login API");
 
-            var result = await _signInManager.PasswordSignInAsync(loginUser.Email, loginUser.Password, false, true);
+			if (!ModelState.IsValid) return CustomResponse(ModelState);
+			_logger.LogInformation("ModelState is Valid");
 
-            if (result.Succeeded)
+			var result = await _signInManager.PasswordSignInAsync(loginUser.Email, loginUser.Password, false, true);
+			_logger.LogInformation("After PasswordSignInAsync");
+
+			if (result.Succeeded)
             {
-                var fullJwt = GetFullJwt(loginUser.Email);
-                return CustomResponse(fullJwt);
+				_logger.LogInformation("result Succeeded");
+
+				var fullJwt = GetFullJwt(loginUser.Email);
+				_logger.LogInformation("After GetFullJwt");
+
+				return CustomResponse(fullJwt);
             }
 
             if (result.IsLockedOut)
             {
-                AddError("This user is temporarily blocked");
+				_logger.LogInformation("result Is LockedOut");
+
+				AddError("This user is temporarily blocked");
                 return CustomResponse();
             }
 
