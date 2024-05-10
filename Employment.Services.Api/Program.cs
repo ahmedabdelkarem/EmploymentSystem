@@ -13,6 +13,10 @@ using Microsoft.EntityFrameworkCore;
 using MassTransit;
 using Microsoft.AspNetCore.Identity;
 using Employment.Domain.IRepository;
+using Microsoft.AspNetCore.Hosting;
+using Serilog;
+using Employment.Application.IServices;
+using Employment.Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,10 +51,15 @@ builder.Services.AddAutoMapperConfiguration();
 builder.Services.AddSwaggerConfiguration();
 
 
-// Application
+// Configure logging with Serilog
+Log.Logger = new LoggerConfiguration()
+	.WriteTo.Console()
+	.WriteTo.File("bin/log/log-.txt", rollingInterval: RollingInterval.Day)
+	.CreateLogger();
+builder.Host.UseSerilog();
 
-
-
+//Services
+builder.Services.AddScoped<IUserService, UserService>();
 // Infra - Data
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IdentityEmploymentContext>();
