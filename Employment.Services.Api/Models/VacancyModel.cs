@@ -6,7 +6,7 @@
 
         public string VacancyName { get; set; }
 
-        public int? CreatedBy { get; set; }
+        public string CreatedBy { get; set; }
 
         public DateTime? StartDate { get; set; }
 

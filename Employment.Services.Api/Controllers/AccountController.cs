@@ -24,12 +24,12 @@ namespace Employment.Services.Api.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly AppJwtSettings _appJwtSettings;
         protected readonly IMapper mapper;
-        protected readonly ILogger<UserController> logger;
+        protected readonly ILogger<AccountController> logger;
         public AccountController(
             SignInManager<IdentityUser> signInManager,
             UserManager<IdentityUser> userManager,
             IOptions<AppJwtSettings> appJwtSettings,
-            IMapper mapper, ILogger<UserController> logger
+            IMapper mapper, ILogger<AccountController> logger
             ) : base(mapper, logger)
         {
             _userManager = userManager;
