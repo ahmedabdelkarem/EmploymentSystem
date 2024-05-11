@@ -21,6 +21,9 @@ using StackExchange.Redis;
 using AutoMapper;
 using Employment.Application.AutoMapper;
 using Employment.Services.Api.AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -78,6 +81,26 @@ var mapperConfig = new MapperConfiguration(mc =>
 IMapper mapper = mapperConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);
 
+//#region JWT 
+//builder.Services.AddAuthentication(options =>
+//{
+//    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+//    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+//}).AddJwtBearer(options =>
+//{
+//    options.RequireHttpsMetadata = false;
+//    options.SaveToken = true;
+//    options.TokenValidationParameters = new TokenValidationParameters
+//    {
+//        ValidateIssuerSigningKey = true,
+//        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Key"])),
+//        ValidateIssuer = false,
+//        ValidateAudience = false
+//    };
+//});
+//#endregion
+
+builder.Services.AddAuthorization();
 
 //Services
 builder.Services.AddScoped<IUserService, UserService>();
@@ -104,6 +127,7 @@ if (app.Environment.IsDevelopment())
 app.UseStatusCodePages();
 
 app.UseHttpsRedirection();
+app.UseAuthentication();
 
 app.UseAuthorization();
 
