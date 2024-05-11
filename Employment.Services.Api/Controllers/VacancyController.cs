@@ -21,6 +21,7 @@ namespace Employment.Services.Api.Controllers
             _vacancyService = vacancyService;
         }
 
+        
         [AllowAnonymous]
         [HttpGet("GetAllVacancies")]
         public async Task<IEnumerable<List<VacancyModel>>> GetAllVacancies()
@@ -59,8 +60,10 @@ namespace Employment.Services.Api.Controllers
             return await _vacancyService.DeleteVacancy(vacancyId);
         }
 
-        [AllowAnonymous]
-        [HttpGet("PostVacancy")]
+        //[AllowAnonymous]
+        //[Authorize(Roles = "Employer")]
+        [Authorize(Roles = "Applicant")]
+        [HttpPost("PostVacancy")]
         public async Task<bool> PostVacancy(int vacancyId)
         {
             _logger.LogInformation("Begin PostVacancy API");
