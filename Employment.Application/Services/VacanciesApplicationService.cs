@@ -6,6 +6,7 @@ using Employment.Domain.Entities;
 using Employment.Domain.IRepository;
 using Employment.Infra.Data.Repository;
 using Microsoft.Extensions.Logging;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,7 @@ namespace Employment.Application.Services
 		protected readonly IVacancyService _vacancyService;
 
 		public VacanciesApplicationService(IVacanciesApplicationRepository vacanciesApplicationRepository,
-			IVacancyService vacancyService ,IMapper mapper, ILogger logger) : base(mapper, logger)
+			IVacancyService vacancyService ,IMapper mapper, ILogger<VacanciesApplicationService> logger) : base(mapper, logger)
 		{
 			_vacanciesApplicationRepository = vacanciesApplicationRepository;
 			_vacancyService = vacancyService;
