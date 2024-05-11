@@ -22,14 +22,8 @@ namespace Employment.Domain.IRepository
 
         Task<bool> PostVacancy(int vacancyId);
 
-        Task<bool> ApplytoVacancy(VacanciesApplication vacanciesApplication);
-
-        List<VacanciesApplication> CheckApplicationExist(string userId, int vacancyId);
-
-        List<VacanciesApplication> CheckApplicationMaxTime(string userId);
-
-        Vacancy CheckApplicationMaxNumber(int vacancyId);
-
+       
         Vacancy GetVacancyById(int vacancyId);
-    }
+
+	}
 }
