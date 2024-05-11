@@ -41,6 +41,7 @@ namespace Employment.Services.Api.Controllers
         [HttpPost("AddVacancy")]
         public async Task<bool> AddVacancy(VacancyModel vacancyModel)
         {
+          
             _logger.LogInformation("Begin AddVacancy API");
 
             return await _vacancyService.AddVacancy(_mapper.Map<VacancyDTO>(vacancyModel));
