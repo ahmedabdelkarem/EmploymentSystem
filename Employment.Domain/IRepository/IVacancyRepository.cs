@@ -19,5 +19,7 @@ namespace Employment.Domain.IRepository
         Task<bool> DeleteVacancy(int vacancyId);
 
         Task<bool> DeactivateVacancy(int vacancyId);
+
+        Task<bool> ApplytoVacancy(string userId, int vacancyId);
     }
 }

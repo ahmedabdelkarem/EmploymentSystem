@@ -63,9 +63,14 @@ namespace Employment.Application.Services
             return false;
         }
 
-        public async Task<bool> ApplytoVacancy(int userId, int vacancyId)
+        public async Task<bool> ApplytoVacancy(string userId, int vacancyId)
         {
-            throw new NotImplementedException();
+            if((!string.IsNullOrEmpty(userId)) && vacancyId != 0) 
+            {
+                return await _vacancyRepository.ApplytoVacancy(userId,vacancyId);
+
+            }
+            return false;
         }
 
         public Task<IEnumerable<List<UserDto>>> GetAllVacancyApplicants(int vacancyId)
@@ -78,6 +83,8 @@ namespace Employment.Application.Services
             throw new NotImplementedException();
         }
 
+
+       
         public void Dispose()
         {
         }

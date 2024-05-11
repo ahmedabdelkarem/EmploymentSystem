@@ -50,5 +50,10 @@ namespace Employment.Infra.Data.Repository
             }
             return false;
         }
+
+        public async Task<bool> ApplytoVacancy(string userId, int vacancyId)
+        {
+          throw new NotImplementedException();
+        }
     }
 }

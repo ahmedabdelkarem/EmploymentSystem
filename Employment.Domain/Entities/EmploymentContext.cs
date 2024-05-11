@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Employment.Infra.Data;
 using Microsoft.EntityFrameworkCore;
-using NetDevPack.Data;
 
 namespace Employment.Domain.Entities;
 
-public partial class EmploymentContext : DbContext,IUnitOfWork
+public partial class EmploymentContext : DbContext
 {
     public EmploymentContext()
     {
@@ -29,24 +27,14 @@ public partial class EmploymentContext : DbContext,IUnitOfWork
 
     public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; }
 
+    public virtual DbSet<VacanciesApplication> VacanciesApplications { get; set; }
+
+    public virtual DbSet<VacanciesApplicationsArc> VacanciesApplicationsArcs { get; set; }
+
+    public virtual DbSet<VacanciesArc> VacanciesArcs { get; set; }
+
     public virtual DbSet<Vacancy> Vacancies { get; set; }
 
-    public async Task<bool> Commit()
-    {
-        // Dispatch Domain Events collection. 
-        // Choices:
-        // A) Right BEFORE committing data (EF SaveChanges) into the DB will make a single transaction including  
-        // side effects from the domain event handlers which are using the same DbContext with "InstancePerLifetimeScope" or "scoped" lifetime
-        // B) Right AFTER committing data (EF SaveChanges) into the DB will make multiple transactions. 
-        // You will need to handle eventual consistency and compensatory actions in case of failures in any of the Handlers. 
-        //await _mediatorHandler.PublishDomainEvents(this).ConfigureAwait(false);
-
-        // After executing this line all the changes (from the Command Handler and Domain Event Handlers) 
-        // performed through the DbContext will be committed
-        var success = await SaveChangesAsync() > 0;
-
-        return success;
-    }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer("Server=.;Trusted_Connection=True;TrustServerCertificate=True;Encrypt=False;Database=Employment");
@@ -106,11 +94,9 @@ public partial class EmploymentContext : DbContext,IUnitOfWork
                 .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.Email)
-                .IsRequired()
                 .HasMaxLength(256)
                 .IsUnicode(false);
             entity.Property(e => e.Name)
-                .IsRequired()
                 .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.NormalizedEmail)
@@ -210,6 +196,56 @@ public partial class EmploymentContext : DbContext,IUnitOfWork
                 .IsUnicode(false);
 
             entity.HasOne(d => d.User).WithMany(p => p.AspNetUserTokens).HasForeignKey(d => d.UserId);
+        });
+
+        modelBuilder.Entity<VacanciesApplication>(entity =>
+        {
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.ApplicationDate).HasColumnType("datetime");
+            entity.Property(e => e.FkApplicantId)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("Fk_ApplicantId");
+            entity.Property(e => e.FkVacancyId).HasColumnName("Fk_VacancyId");
+
+            entity.HasOne(d => d.FkApplicant).WithMany(p => p.VacanciesApplications)
+                .HasForeignKey(d => d.FkApplicantId)
+                .HasConstraintName("FK_VacanciesApplications_AspNetUsers");
+
+            entity.HasOne(d => d.FkVacancy).WithMany(p => p.VacanciesApplications)
+                .HasForeignKey(d => d.FkVacancyId)
+                .HasConstraintName("FK_VacanciesApplications_Vacancies");
+        });
+
+        modelBuilder.Entity<VacanciesApplicationsArc>(entity =>
+        {
+            entity.ToTable("VacanciesApplications_ARC");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("ID");
+            entity.Property(e => e.ApplicationDate).HasColumnType("datetime");
+            entity.Property(e => e.FkApplicantId)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("Fk_ApplicantId");
+            entity.Property(e => e.FkVacancyId).HasColumnName("Fk_VacancyId");
+
+            entity.HasOne(d => d.FkApplicant).WithMany(p => p.VacanciesApplicationsArcs)
+                .HasForeignKey(d => d.FkApplicantId)
+                .HasConstraintName("FK_VacanciesApplications_AspNetUsers_ARC");
+        });
+
+        modelBuilder.Entity<VacanciesArc>(entity =>
+        {
+            entity.ToTable("Vacancies_ARC");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("ID");
+            entity.Property(e => e.ExpirationDate).HasColumnType("datetime");
+            entity.Property(e => e.StartDate).HasColumnType("datetime");
+            entity.Property(e => e.VacancyName).HasMaxLength(200);
         });
 
         modelBuilder.Entity<Vacancy>(entity =>

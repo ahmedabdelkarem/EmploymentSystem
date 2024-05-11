@@ -79,7 +79,7 @@ namespace Employment.Services.Api.Controllers
 
         [AllowAnonymous]
         [HttpGet("ApplytoVacancy")]
-        public async Task<bool> ApplytoVacancy(int userId , int vacancyId)
+        public async Task<bool> ApplytoVacancy(string userId , int vacancyId)
         {
             _logger.LogInformation("Begin ApplytoVacancy API");
 
