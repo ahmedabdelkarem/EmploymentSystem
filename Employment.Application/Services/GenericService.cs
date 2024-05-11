@@ -14,6 +14,7 @@ namespace Employment.Application.Services
         protected readonly IMapper _mapper;
         protected readonly ILogger _logger;
 		
+
 		public GenericService(IMapper mapper,ILogger logger)
         {
                 _mapper = mapper;

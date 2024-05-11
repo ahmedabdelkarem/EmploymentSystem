@@ -8,6 +8,7 @@ using Employment.Infra.Data;
 using Employment.Infra.Data.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +23,7 @@ namespace Employment.Application.Services
 	{
 		protected readonly IVacancyRepository _vacancyRepository;
 
-		public VacancyService(IVacancyRepository vacancyRepository, IMapper mapper,ILogger logger) : base(mapper, logger)
+		public VacancyService(IVacancyRepository vacancyRepository, IMapper mapper,ILogger<VacancyService> logger) : base(mapper, logger)
 		{
 			_vacancyRepository = vacancyRepository;
 		}
