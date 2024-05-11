@@ -7,6 +7,7 @@ using Employment.Domain.IRepository;
 using Employment.Infra.Data;
 using Employment.Infra.Data.Repository;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,74 +21,145 @@ namespace Employment.Application.Services
 	public class VacancyService : GenericService, IVacancyService
 	{
 		protected readonly IVacancyRepository _vacancyRepository;
-		public VacancyService(IVacancyRepository vacancyRepository, IMapper mapper) : base(mapper)
+
+		public VacancyService(IVacancyRepository vacancyRepository, IMapper mapper,ILogger logger) : base(mapper, logger)
 		{
 			_vacancyRepository = vacancyRepository;
 		}
 
 		public async Task<List<VacancyDTO>> GetAllVacancies()
 		{
+			try
+			{
+
 			var results = await _vacancyRepository.GetAllVacancies();
 
 			return _mapper.Map<List<VacancyDTO>>(results);
+			}
+			catch (Exception Ex)
+			{
+				_logger.LogInformation(Ex.Message);
+
+				throw;
+			}
 
 		}
 		public async Task<bool> AddVacancy(VacancyDTO vacancyDTO)
 		{
-			return await _vacancyRepository.AddVacancy(_mapper.Map<Vacancy>(vacancyDTO));
+			try
+			{
+				return await _vacancyRepository.AddVacancy(_mapper.Map<Vacancy>(vacancyDTO));
+
+			}
+			catch (Exception Ex)
+			{
+				_logger.LogInformation(Ex.Message);
+
+				throw;
+			}
 		}
 
 		public async Task<bool> EditVacancy(VacancyDTO vacancyDTO)
 		{
-			if (vacancyDTO != null)
+			try
 			{
-				return await _vacancyRepository.EditVacancy(_mapper.Map<Vacancy>(vacancyDTO));
+
+				if (vacancyDTO != null)
+				{
+					return await _vacancyRepository.EditVacancy(_mapper.Map<Vacancy>(vacancyDTO));
+				}
+				return false;
+
 			}
-			return false;
+			catch (Exception Ex)
+			{
+				_logger.LogInformation(Ex.Message);
+
+				throw;
+			}
 		}
 
 		public async Task<bool> DeleteVacancy(int vacancyId)
 		{
-			if (vacancyId != 0)
+			try
 			{
-				return await _vacancyRepository.DeleteVacancy(vacancyId);
+
+				if (vacancyId != 0)
+				{
+					return await _vacancyRepository.DeleteVacancy(vacancyId);
+				}
+				return false;
 			}
-			return false;
+			catch (Exception Ex)
+			{
+				_logger.LogInformation(Ex.Message);
+
+				throw;
+			}
 		}
 
 		public async Task<bool> DeactivateVacancy(int vacancyId)
 		{
-			if (vacancyId != 0)
+			try
 			{
-				return await _vacancyRepository.DeactivateVacancy(vacancyId);
+				if (vacancyId != 0)
+				{
+					return await _vacancyRepository.DeactivateVacancy(vacancyId);
+				}
+				return false;
+
 			}
-			return false;
+			catch (Exception Ex)
+			{
+				_logger.LogInformation(Ex.Message);
+
+				throw;
+			}
 		}
 
 
-		
+
 		public async Task<bool> PostVacancy(int vacancyId)
 		{
-			if (vacancyId != 0)
+			try
 			{
-				return await _vacancyRepository.PostVacancy(vacancyId);
+				if (vacancyId != 0)
+				{
+					return await _vacancyRepository.PostVacancy(vacancyId);
+				}
+				return false;
+
 			}
-			return false;
+			catch (Exception Ex)
+			{
+				_logger.LogInformation(Ex.Message);
+
+				throw;
+			}
 		}
 
 
 		public bool CheckApplicationMaxNumber(int vacancyId)
 		{
-			var vacancy = _vacancyRepository.GetVacancyById(vacancyId);
-			if (vacancy != null)
+			try
 			{
-				if (vacancy.CurrentNumberOfApplication >= vacancy.MaxNumberOfApplications)
+				var vacancy = _vacancyRepository.GetVacancyById(vacancyId);
+				if (vacancy != null)
 				{
-					return false;
+					if (vacancy.CurrentNumberOfApplication >= vacancy.MaxNumberOfApplications)
+					{
+						return false;
+					}
+					return true;
 				}
-				return true;
+				return false;
 			}
-			return false;
+			catch (Exception Ex)
+			{
+				_logger.LogInformation(Ex.Message);
+				throw;
+			}
+
 
 		}
 
