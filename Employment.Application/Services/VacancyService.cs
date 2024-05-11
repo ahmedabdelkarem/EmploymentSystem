@@ -6,6 +6,7 @@ using Employment.Domain.Entities;
 using Employment.Domain.IRepository;
 using Employment.Infra.Data;
 using Employment.Infra.Data.Repository;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -67,7 +68,14 @@ namespace Employment.Application.Services
         {
             if((!string.IsNullOrEmpty(userId)) && vacancyId != 0) 
             {
-                return await _vacancyRepository.ApplytoVacancy(userId,vacancyId);
+
+                VacanciesApplicationDTO dto = new VacanciesApplicationDTO
+                {
+                    ApplicationDate = DateTime.Now,
+                    FkApplicantId = userId,
+                    FkVacancyId = vacancyId
+                };
+                return await _vacancyRepository.ApplytoVacancy(_mapper.Map<VacanciesApplication>(dto));
 
             }
             return false;
@@ -80,17 +88,74 @@ namespace Employment.Application.Services
 
         public async Task<bool> PostVacancy(int vacancyId)
         {
-            throw new NotImplementedException();
+            if (vacancyId != 0)
+            {
+                return await _vacancyRepository.PostVacancy(vacancyId);
+            }
+            return false;
+        }
+
+        private bool ValidateApplication(string userId, int vacancyId)
+        {
+            //check Existence of same application with same vacancy
+            if (CheckApplicationExist(userId, vacancyId))
+            {
+                //exist
+                return false;
+            }
+            if (CheckApplicationMaxTime(userId))
+            {
+                //exist app with same day
+                return false;
+            }
+            if(CheckApplicationMaxNumber(vacancyId) == false)
+            {
+                return false;
+            }
+            return true;
+        }
+        private bool CheckApplicationExist(string userId , int vacancyId)
+        {
+           var results = _vacancyRepository.CheckApplicationExist( userId,  vacancyId);
+            if(results != null && results.Count > 0)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private bool CheckApplicationMaxTime(string userId)
+        {
+
+            var results = _vacancyRepository.CheckApplicationMaxTime(userId);
+            if (results != null && results.Count > 0)
+            {
+                return true;
+            }
+            return false;
         }
 
 
-       
+        private bool CheckApplicationMaxNumber(int vacancyId)
+        {
+            var vacancy = _vacancyRepository.GetVacancyById(vacancyId);
+            if(vacancy != null)
+            {
+                if(vacancy.CurrentNumberOfApplication >= vacancy.MaxNumberOfApplications)
+                {
+                    return false;
+                }
+                return true;
+            }
+            return false;
+
+        }
+
         public void Dispose()
         {
         }
 
 
-       
 
        
     }

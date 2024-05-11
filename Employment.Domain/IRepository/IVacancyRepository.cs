@@ -20,6 +20,16 @@ namespace Employment.Domain.IRepository
 
         Task<bool> DeactivateVacancy(int vacancyId);
 
-        Task<bool> ApplytoVacancy(string userId, int vacancyId);
+        Task<bool> PostVacancy(int vacancyId);
+
+        Task<bool> ApplytoVacancy(VacanciesApplication vacanciesApplication);
+
+        List<VacanciesApplication> CheckApplicationExist(string userId, int vacancyId);
+
+        List<VacanciesApplication> CheckApplicationMaxTime(string userId);
+
+        Vacancy CheckApplicationMaxNumber(int vacancyId);
+
+        Vacancy GetVacancyById(int vacancyId);
     }
 }

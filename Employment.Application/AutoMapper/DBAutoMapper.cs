@@ -14,6 +14,10 @@ namespace Employment.Application.AutoMapper
 
             CreateMap<Vacancy, VacancyDTO>().ReverseMap();
 
+            CreateMap<VacanciesApplication, VacanciesApplicationDTO>().ReverseMap();
+
+            
+
         }
     }
 }

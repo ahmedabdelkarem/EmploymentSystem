@@ -15,13 +15,15 @@ public partial class Vacancy
 
     public DateTime? ExpirationDate { get; set; }
 
-    public int? NumberOfApplications { get; set; }
+    public int? MaxNumberOfApplications { get; set; }
 
     public bool? IsExpired { get; set; }
 
     public bool? IsPosted { get; set; }
 
     public bool? IsActive { get; set; }
+
+    public int? CurrentNumberOfApplication { get; set; }
 
     public virtual ICollection<VacanciesApplication> VacanciesApplications { get; set; } = new List<VacanciesApplication>();
 }
