@@ -7,6 +7,7 @@ using Employment.Domain.Entities;
 using Employment.Services.Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using System.Net;
 
 
@@ -149,9 +150,8 @@ namespace Employment.Services.Api.Controllers
 
 		}
 
-		[AllowAnonymous]
-		//[Authorize(Roles = "Employer")]
-		//[Authorize(Roles = "Applicant")]
+		//[AllowAnonymous]
+		[Authorize(Roles = "Employer")]
 		[HttpPost("PostVacancy")]
 		public async Task<IActionResult> PostVacancy(int vacancyId)
 		{

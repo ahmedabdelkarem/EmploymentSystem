@@ -65,7 +65,7 @@ namespace Employment.Services.Api.Controllers
             {
 				_logger.LogInformation("result Succeeded");
 
-				return CustomResponse(GetFullJwt(user));
+				return CustomResponse(await GetFullJwt(user));
             }
 			_logger.LogInformation("Error count = "+ result.Errors.Count() );
 
@@ -98,7 +98,7 @@ namespace Employment.Services.Api.Controllers
             {
 				_logger.LogInformation("result Succeeded");
 
-				var fullJwt = GetFullJwt(user);
+				var fullJwt = await GetFullJwt(user);
 				_logger.LogInformation("After GetFullJwt");
 
 				return CustomResponse(fullJwt);
@@ -118,6 +118,48 @@ namespace Employment.Services.Api.Controllers
 
         private async Task<string> GetFullJwt(IdentityUser user)
         {
+            try
+            {
+                #region Token Generation
+                // create claims for the user
+                var claims = new List<Claim>
+             {
+              new Claim(ClaimTypes.Name, user.UserName)
+             };
+
+                var roles = await _userManager.GetRolesAsync(user);
+                foreach (var role in roles)
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, role));
+                }
+
+                // create a signing key
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("PreNOQh4e_qnxdNU_dqdHP1p_rUsdm28"));
+                //var signinKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("this is my custom Secret key for authentication"));
+
+                // create a signing credential
+                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+                // create a token
+                var token = new JwtSecurityToken(
+                    issuer: "MyEnvironment",
+                    audience: "https://localhost",
+                    claims: claims,
+                    expires: DateTime.Now.AddMinutes(30),
+                    signingCredentials: creds
+                );
+                string TokenString = new JwtSecurityTokenHandler().WriteToken(token);
+                //var userRole = token.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+
+                return TokenString;
+                #endregion
+
+            }
+            catch (Exception EX)
+            {
+
+                throw;
+            }
             //return new JwtBuilder()
             //    .WithUserManager(_userManager)
             //    .WithJwtSettings(_appJwtSettings)
@@ -127,36 +169,6 @@ namespace Employment.Services.Api.Controllers
             //    .WithUserRoles()
             //    .BuildToken();
 
-            #region Token Generation
-            // create claims for the user
-            var claims = new List<Claim>
-             {
-              new Claim(ClaimTypes.Name, user.UserName)
-             };
-
-            var roles = await _userManager.GetRolesAsync(user);
-            foreach (var role in roles)
-            {
-                claims.Add(new Claim(ClaimTypes.Role, role));
-            }
-
-            // create a signing key
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("PreNOQh4e_qnxdNU_dqdHP1p"));
-
-            // create a signing credential
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            // create a token
-            var token = new JwtSecurityToken(
-                issuer: "Organization.com",
-                audience: "Organization.com",
-                claims: claims,
-                expires: DateTime.Now.AddMinutes(30),
-                signingCredentials: creds
-            );
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
-            #endregion
         }
     }
 
