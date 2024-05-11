@@ -15,13 +15,13 @@ namespace Employment.Infra.Data.Repository
         {
         }
 
-        public async Task<IEnumerable<List<Vacancy>>> GetAllVacancies()
+        public async Task<List<Vacancy>> GetAllVacancies()
         {
             var result = _dbContext.Vacancies.Where(vac => vac.IsActive == true
                                          && vac.IsExpired == false
-                                         && vac.IsPosted == true);
+                                         && vac.IsPosted == true).ToList();
 
-            return (IEnumerable<List<Vacancy>>)result;
+            return result;
         }
 
         public async Task<bool> AddVacancy(Vacancy vacancy)

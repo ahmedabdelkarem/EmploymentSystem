@@ -10,7 +10,7 @@ namespace Employment.Domain.IRepository
     public interface IVacancyRepository
     {
  
-        Task<IEnumerable<List<Vacancy>>> GetAllVacancies();
+        Task<List<Vacancy>> GetAllVacancies();
 
         Task<bool> AddVacancy(Vacancy vacancy);
 

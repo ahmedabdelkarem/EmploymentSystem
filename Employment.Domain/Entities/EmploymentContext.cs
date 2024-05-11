@@ -251,6 +251,7 @@ public partial class EmploymentContext : DbContext
         modelBuilder.Entity<Vacancy>(entity =>
         {
             entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.CurrentNumberOfApplication).HasDefaultValueSql("((0))");
             entity.Property(e => e.ExpirationDate).HasColumnType("datetime");
             entity.Property(e => e.StartDate).HasColumnType("datetime");
             entity.Property(e => e.VacancyName).HasMaxLength(200);

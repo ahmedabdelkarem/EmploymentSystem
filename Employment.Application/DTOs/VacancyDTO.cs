@@ -25,5 +25,7 @@ namespace Employment.Application.DTOs
         public bool? IsPosted { get; set; }
 
         public bool? IsActive { get; set; }
+        public int CurrentNumberOfApplication { get; set; } 
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Employment.Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,10 +9,14 @@ namespace Employment.Application.DTOs
 {
     public class VacanciesApplicationDTO
     {
-        public int FkVacancyId { get; set; }
+       
+        public int Id { get; set; }
+
+        public int? FkVacancyId { get; set; }
 
         public string FkApplicantId { get; set; }
 
         public DateTime? ApplicationDate { get; set; }
+
     }
 }

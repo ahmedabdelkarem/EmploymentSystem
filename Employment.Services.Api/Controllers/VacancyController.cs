@@ -29,12 +29,12 @@ namespace Employment.Services.Api.Controllers
         
         [AllowAnonymous]
         [HttpGet("GetAllVacancies")]
-        public async Task<IEnumerable<List<VacancyModel>>> GetAllVacancies()
+        public async Task<List<VacancyModel>> GetAllVacancies()
         {
             _logger.LogInformation("Begin GetAllVacancies API");
 
             var result =  await _vacancyService.GetAllVacancies();
-            return _mapper.Map<IEnumerable<List<VacancyModel>>>(result);
+            return _mapper.Map<List<VacancyModel>>(result);
         }
 
         [AllowAnonymous]

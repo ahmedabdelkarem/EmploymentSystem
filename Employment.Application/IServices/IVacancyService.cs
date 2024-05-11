@@ -11,7 +11,7 @@ namespace Employment.Application.IServices
 {
     public interface IVacancyService : IDisposable
     {
-        Task<IEnumerable<List<VacancyDTO>>> GetAllVacancies();
+        Task<List<VacancyDTO>> GetAllVacancies();
         Task<bool> AddVacancy (VacancyDTO vacancyDTO);
         Task<bool> EditVacancy(VacancyDTO vacancyDTO);
         Task<bool> DeleteVacancy(int vacancyId);

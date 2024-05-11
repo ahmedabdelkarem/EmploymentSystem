@@ -25,11 +25,11 @@ namespace Employment.Application.Services
 			_vacancyRepository = vacancyRepository;
 		}
 
-		public async Task<IEnumerable<List<VacancyDTO>>> GetAllVacancies()
+		public async Task<List<VacancyDTO>> GetAllVacancies()
 		{
 			var results = await _vacancyRepository.GetAllVacancies();
 
-			return _mapper.Map<IEnumerable<List<VacancyDTO>>>(results);
+			return _mapper.Map<List<VacancyDTO>>(results);
 
 		}
 		public async Task<bool> AddVacancy(VacancyDTO vacancyDTO)

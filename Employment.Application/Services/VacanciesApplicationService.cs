@@ -37,7 +37,8 @@ namespace Employment.Application.Services
 						ApplicationDate = DateTime.Now,
 						FkApplicantId = userId,
 						FkVacancyId = vacancyId
-					};
+
+                    };
 					return await _vacanciesApplicationRepository.ApplytoVacancy(_mapper.Map<VacanciesApplication>(dto));
 				}
 

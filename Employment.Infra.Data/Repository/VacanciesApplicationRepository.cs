@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Employment.Infra.Data.Repository
 {
@@ -17,9 +19,33 @@ namespace Employment.Infra.Data.Repository
 
 		public async Task<bool> ApplytoVacancy(VacanciesApplication vacanciesApplication)
 		{
-			vacanciesApplication.FkVacancy.CurrentNumberOfApplication++;
-			return Insert(_dbContext, vacanciesApplication);
+            bool Inserted = false;
 
+            using (TransactionScope Scope = new TransactionScope())
+			{
+
+                Inserted = Insert(_dbContext, vacanciesApplication);
+
+				if (Inserted)
+				{
+                    var currentApp = _dbContext.VacanciesApplications.
+                                                   Where(a => a.FkVacancyId == vacanciesApplication.FkVacancyId)
+                                                  .FirstOrDefault();
+
+                    if (currentApp != null)
+                    {
+                       currentApp.FkVacancy.CurrentNumberOfApplication++;
+                       Inserted =  Update(_dbContext, currentApp);
+                    }
+					if (Inserted)
+					{
+                        Scope.Complete();
+                    }
+                    Scope.Dispose();
+                }
+                
+            }
+			return Inserted;
 		}
 
 		public List<VacanciesApplication> CheckApplicationExist(string userId, int vacancyId)
