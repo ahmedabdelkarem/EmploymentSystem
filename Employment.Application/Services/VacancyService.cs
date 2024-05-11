@@ -2,6 +2,7 @@
 using Employment.Application.DTOs;
 using Employment.Application.IServices;
 using Employment.Application.ViewModels;
+using Employment.Domain.Entities;
 using Employment.Domain.IRepository;
 using Employment.Infra.Data;
 using Employment.Infra.Data.Repository;
@@ -13,32 +14,66 @@ using System.Threading.Tasks;
 
 namespace Employment.Application.Services
 {
-  
 
-    public class VacancyService : GenericService , IVacancyService 
+
+    public class VacancyService : GenericService, IVacancyService
     {
-        protected readonly  IVacancyRepository _vacancyRepository;
-        public VacancyService(IVacancyRepository vacancyRepository, IMapper mapper ) : base (mapper)
+        protected readonly IVacancyRepository _vacancyRepository;
+        public VacancyService(IVacancyRepository vacancyRepository, IMapper mapper) : base(mapper)
         {
             _vacancyRepository = vacancyRepository;
         }
-        public Task<IEnumerable<bool>> AddVacancy(VacancyDTO vacancyDTO)
+
+        public async Task<IEnumerable<List<VacancyDTO>>> GetAllVacancies()
         {
-           
+            var results = await _vacancyRepository.GetAllVacancies();
+
+            return _mapper.Map<IEnumerable<List<VacancyDTO>>>(results);
+
+        }
+        public async Task<bool> AddVacancy(VacancyDTO vacancyDTO)
+        {
+            return await _vacancyRepository.AddVacancy(_mapper.Map<Vacancy>(vacancyDTO));
+        }
+
+        public async Task<bool> EditVacancy(VacancyDTO vacancyDTO)
+        {
+            if (vacancyDTO != null)
+            {
+               return  await _vacancyRepository.EditVacancy(_mapper.Map<Vacancy>(vacancyDTO));
+            }
+            return false;
+        }
+
+        public async Task<bool> DeleteVacancy(int vacancyId)
+        {
+            if (vacancyId != 0)
+            {
+                return await _vacancyRepository.DeleteVacancy(vacancyId);
+            }
+            return false;
+        }
+
+        public async Task<bool> DeactivateVacancy(int vacancyId)
+        {
+            if (vacancyId != 0)
+            {
+                return await _vacancyRepository.DeactivateVacancy(vacancyId);
+            }
+            return false;
+        }
+
+        public async Task<bool> ApplytoVacancy(int userId, int vacancyId)
+        {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<bool>> ApplytoVacancy(int userId, int vacancyId)
+        public Task<IEnumerable<List<UserDto>>> GetAllVacancyApplicants(int vacancyId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<bool>> DeactivateVacancy(int vacancyId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<bool>> DeleteVacancy(int vacancyId)
+        public async Task<bool> PostVacancy(int vacancyId)
         {
             throw new NotImplementedException();
         }
@@ -47,27 +82,9 @@ namespace Employment.Application.Services
         {
         }
 
-        public Task<IEnumerable<bool>> EditVacancy(VacancyDTO vacancyDTO)
-        {
-            throw new NotImplementedException();
-        }
 
-        public async Task<IEnumerable<List<VacancyDTO>>> GetAllVacancies()
-        {
-            var results = await _vacancyRepository.GetAllVacancies();
-         
-           return _mapper.Map<IEnumerable<List<VacancyDTO>>>(results);
+       
 
-        }
-
-        public Task<IEnumerable<List<UserDto>>> GetAllVacancyApplicants(int vacancyId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<bool>> PostVacancy(int vacancyId)
-        {
-            throw new NotImplementedException();
-        }
+       
     }
 }

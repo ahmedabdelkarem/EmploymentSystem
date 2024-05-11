@@ -12,12 +12,12 @@ namespace Employment.Application.IServices
     public interface IVacancyService : IDisposable
     {
         Task<IEnumerable<List<VacancyDTO>>> GetAllVacancies();
-        Task<IEnumerable<bool>> AddVacancy(VacancyDTO vacancyDTO);
-        Task<IEnumerable<bool>> EditVacancy(VacancyDTO vacancyDTO);
-        Task<IEnumerable<bool>> DeleteVacancy(int vacancyId);
-        Task<IEnumerable<bool>> PostVacancy(int vacancyId);
-        Task<IEnumerable<bool>> DeactivateVacancy(int vacancyId);
-        Task<IEnumerable<bool>> ApplytoVacancy(int userId, int vacancyId);
+        Task<bool> AddVacancy (VacancyDTO vacancyDTO);
+        Task<bool> EditVacancy(VacancyDTO vacancyDTO);
+        Task<bool> DeleteVacancy(int vacancyId);
+        Task<bool> PostVacancy(int vacancyId);
+        Task<bool> DeactivateVacancy(int vacancyId);
+        Task<bool> ApplytoVacancy(int userId, int vacancyId);
         Task<IEnumerable<List<UserDto>>> GetAllVacancyApplicants(int vacancyId);
        
     }

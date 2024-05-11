@@ -11,5 +11,13 @@ namespace Employment.Domain.IRepository
     {
  
         Task<IEnumerable<List<Vacancy>>> GetAllVacancies();
+
+        Task<bool> AddVacancy(Vacancy vacancy);
+
+        Task<bool> EditVacancy(Vacancy vacancy);
+
+        Task<bool> DeleteVacancy(int vacancyId);
+
+        Task<bool> DeactivateVacancy(int vacancyId);
     }
 }

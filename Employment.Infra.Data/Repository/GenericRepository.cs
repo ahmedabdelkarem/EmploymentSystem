@@ -30,9 +30,10 @@ namespace Employment.Infra.Data.Repository
             throw new NotImplementedException();
         }
 
-        public T GetById(DbContext _context, T id)
+        public T GetById(DbContext _context, int id)
         {
-            throw new NotImplementedException();
+            return _context.Find<T>(id);
+
         }
 
         public bool Insert(DbContext _context, T _obj)
@@ -43,17 +44,33 @@ namespace Employment.Infra.Data.Repository
 
         public bool Insert(DbContext _context, ref T _obj)
         {
-            throw new NotImplementedException();
-        }
-
-        public bool SaveChanges(DbContext _context)
-        {
-            throw new NotImplementedException();
+            _context.Add<T>(_obj);
+            return SaveChanges(_context);
         }
 
         public bool Update(DbContext _context, T _obj)
         {
-            throw new NotImplementedException();
+           _context.Update<T>(_obj);
+           
+            return SaveChanges(_context);
         }
+
+        public bool Delete(DbContext _context, int Id)
+        {
+            T results = GetById(_context, Id);
+            _context.Remove(results);
+            return SaveChanges(_context);
+           
+        }
+        public bool SaveChanges(DbContext _context)
+        {
+            int result = _context.SaveChanges();
+            if (result > 0)
+                return true;
+            else
+                return false;
+        }
+
+
     }
 }

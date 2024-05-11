@@ -32,8 +32,8 @@ namespace Employment.Services.Api.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("AddVacancy")]
-        public async Task<IEnumerable<bool>> AddVacancy(VacancyModel vacancyModel)
+        [HttpPost("AddVacancy")]
+        public async Task<bool> AddVacancy(VacancyModel vacancyModel)
         {
             _logger.LogInformation("Begin AddVacancy API");
 
@@ -42,8 +42,8 @@ namespace Employment.Services.Api.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("EditVacancy")]
-        public async Task<IEnumerable<bool>> EditVacancy(VacancyModel vacancyModel)
+        [HttpPut("EditVacancy")]
+        public async Task<bool> EditVacancy(VacancyModel vacancyModel)
         {
             _logger.LogInformation("Begin EditVacancy API");
 
@@ -51,8 +51,8 @@ namespace Employment.Services.Api.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("DeleteVacancy")]
-        public async Task<IEnumerable<bool>> DeleteVacancy(int vacancyId)
+        [HttpDelete("DeleteVacancy")]
+        public async Task<bool> DeleteVacancy(int vacancyId)
         {
             _logger.LogInformation("Begin DeleteVacancy API");
 
@@ -61,7 +61,7 @@ namespace Employment.Services.Api.Controllers
 
         [AllowAnonymous]
         [HttpGet("PostVacancy")]
-        public async Task<IEnumerable<bool>> PostVacancy(int vacancyId)
+        public async Task<bool> PostVacancy(int vacancyId)
         {
             _logger.LogInformation("Begin PostVacancy API");
 
@@ -70,7 +70,7 @@ namespace Employment.Services.Api.Controllers
 
         [AllowAnonymous]
         [HttpGet("DeactivateVacancy")]
-        public async Task<IEnumerable<bool>> DeactivateVacancy(int vacancyId)
+        public async Task<bool> DeactivateVacancy(int vacancyId)
         {
             _logger.LogInformation("Begin DeactivateVacancy API");
 
@@ -79,7 +79,7 @@ namespace Employment.Services.Api.Controllers
 
         [AllowAnonymous]
         [HttpGet("ApplytoVacancy")]
-        public async Task<IEnumerable<bool>> ApplytoVacancy(int userId , int vacancyId)
+        public async Task<bool> ApplytoVacancy(int userId , int vacancyId)
         {
             _logger.LogInformation("Begin ApplytoVacancy API");
 

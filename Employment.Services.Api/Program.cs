@@ -18,6 +18,9 @@ using Serilog;
 using Employment.Application.IServices;
 using Employment.Application.Services;
 using StackExchange.Redis;
+using AutoMapper;
+using Employment.Application.AutoMapper;
+using Employment.Services.Api.AutoMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -66,12 +69,24 @@ builder.Services.AddStackExchangeRedisCache(options =>
 	options.InstanceName = "SampleInstance"; // Change to a meaningful instance name
 });
 
+//Auto Mapper Configurations
+var mapperConfig = new MapperConfiguration(mc =>
+{
+    mc.AddProfile(new APIAutoMapper());
+    mc.AddProfile(new DBAutoMapper());
+});
+IMapper mapper = mapperConfig.CreateMapper();
+builder.Services.AddSingleton(mapper);
+
 
 //Services
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IVacancyService, VacancyService>();
 builder.Services.AddScoped<ICacheService, CacheService>();
+
 // Infra - Data
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IVacancyRepository, VacancyRepository>();
 builder.Services.AddScoped<IdentityEmploymentContext>();
 
 

@@ -23,12 +23,32 @@ namespace Employment.Infra.Data.Repository
 
             return (IEnumerable<List<Vacancy>>)result;
         }
+
         public async Task<bool> AddVacancy(Vacancy vacancy)
         {
-            var result =  Insert(_dbContext, vacancy);
-            return result;
+            return  Insert(_dbContext, vacancy);
 
+        }
 
+        public async Task<bool> EditVacancy(Vacancy vacancy)
+        {
+            return Update(_dbContext, vacancy);
+        }
+
+        public async Task<bool> DeleteVacancy(int vacancyId)
+        {
+            return Delete(_dbContext, vacancyId);
+        }
+
+        public async Task<bool> DeactivateVacancy(int vacancyId)
+        {
+           var vacancy = GetById(_dbContext, vacancyId);
+            if (vacancy != null)
+            {
+                vacancy.IsActive = false;
+               return Update(_dbContext, vacancy);
+            }
+            return false;
         }
     }
 }
