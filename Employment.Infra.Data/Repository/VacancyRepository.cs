@@ -51,10 +51,7 @@ namespace Employment.Infra.Data.Repository
             return false;
         }
 
-        public async Task<bool> ApplytoVacancy(VacanciesApplication vacanciesApplication)
-        {
-            throw new NotImplementedException();
-        }
+       
 
         public async Task<bool> PostVacancy(int vacancyId)
         {
@@ -66,43 +63,18 @@ namespace Employment.Infra.Data.Repository
             }
             return false;
         }
-        public List<VacanciesApplication> CheckApplicationExist(string userId, int vacancyId)
-        {
-            List<VacanciesApplication> vacancyApp = new List<VacanciesApplication>();
-
-            vacancyApp = _dbContext.VacanciesApplications.Where(a => a.FkApplicantId.Trim() == userId.Trim()
-            && a.FkVacancyId == vacancyId).ToList();
-
-            return vacancyApp;
-
-        }
-        public List<VacanciesApplication> CheckApplicationMaxTime(string userId)
-        {
-            List<VacanciesApplication> vacancyApp = new List<VacanciesApplication>();
-
-            vacancyApp = _dbContext.VacanciesApplications.Where(a => a.FkApplicantId.Trim() == userId.Trim()
-            && a.ApplicationDate.Value.Date == DateTime.Now.Date).ToList();
-
-            return vacancyApp;
-        }
-
-        public Vacancy CheckApplicationMaxNumber(int vacancyId)
-        {
-            var vacancy = GetById(_dbContext, vacancyId);
-            return vacancy;
-
-        }
-
+       
         public Vacancy GetVacancyById(int vacancyId)
         {
             var vacancy = GetById(_dbContext, vacancyId);
             return vacancy;
 
 
-
         }
+		
 
-    }
+
+	}
 }
 
 

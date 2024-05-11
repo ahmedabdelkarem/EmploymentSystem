@@ -17,8 +17,9 @@ namespace Employment.Application.IServices
         Task<bool> DeleteVacancy(int vacancyId);
         Task<bool> PostVacancy(int vacancyId);
         Task<bool> DeactivateVacancy(int vacancyId);
-        Task<bool> ApplytoVacancy(string userId, int vacancyId);
-        Task<IEnumerable<List<UserDto>>> GetAllVacancyApplicants(int vacancyId);
-       
-    }
+
+        bool CheckApplicationMaxNumber(int vacancyId);
+
+
+	}
 }

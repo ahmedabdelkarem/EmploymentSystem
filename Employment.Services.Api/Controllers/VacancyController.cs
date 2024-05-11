@@ -15,11 +15,16 @@ namespace Employment.Services.Api.Controllers
     public class VacancyController : ApiController
     {
         private readonly IVacancyService _vacancyService;
-        public VacancyController(IVacancyService vacancyService ,IMapper mapper, ILogger<VacancyController> logger)
+		private readonly IVacanciesApplicationService _vacanciesApplicationService;
+
+		public VacancyController(IVacancyService vacancyService, IVacanciesApplicationService vacanciesApplicationService 
+            , IMapper mapper,  ILogger<VacancyController> logger)
             : base(mapper, logger)
         {
             _vacancyService = vacancyService;
-        }
+            _vacanciesApplicationService = vacanciesApplicationService;
+
+		}
 
         
         [AllowAnonymous]
@@ -81,23 +86,25 @@ namespace Employment.Services.Api.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("ApplytoVacancy")]
+        [HttpPost("ApplytoVacancy")]
         public async Task<bool> ApplytoVacancy(string userId , int vacancyId)
         {
             _logger.LogInformation("Begin ApplytoVacancy API");
 
-            return await _vacancyService.ApplytoVacancy(userId, vacancyId);
+            return await _vacanciesApplicationService.ApplytoVacancy(userId, vacancyId);
         }
+
         [AllowAnonymous]
         [HttpGet("GetAllVacancyApplicants")]
-        public async Task<IEnumerable<List<UserModel>>> GetAllVacancyApplicants(int vacancyId)
+        public async Task<List<string>> GetAllVacancyApplicants(int vacancyId)
         {
             _logger.LogInformation("Begin GetAllVacancyApplicants API");
 
-            var result =  await _vacancyService.GetAllVacancyApplicants( vacancyId);
-            return _mapper.Map<IEnumerable<List<UserModel>>>(result);
+            var result =  await _vacanciesApplicationService.GetAllVacancyApplicants( vacancyId);
+            return result;
 
-        }
+
+		}
     }
 }
 
