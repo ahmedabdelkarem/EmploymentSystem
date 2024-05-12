@@ -100,6 +100,11 @@ builder.Services.AddScoped<IdentityEmploymentContext>();
 //DBContext
 builder.Services.AddScoped<EmploymentContext>();
 
+// Ensure migrations are applied on startup
+using var serviceScope = builder.Services.BuildServiceProvider().CreateScope();
+var dbContext = serviceScope.ServiceProvider.GetRequiredService<EmploymentContext>();
+dbContext.Database.Migrate();
+
 var app = builder.Build();  
 
 // Configure the HTTP request pipeline.
