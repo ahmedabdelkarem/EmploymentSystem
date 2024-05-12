@@ -32,7 +32,7 @@ namespace Employment.Application.Services
 
         public async Task<ResponseModel<List<VacancyDTO>>> GetAllVacancies()
         {
-            ResponseModel<List<VacancyDTO>> response = new ResponseModel<List<VacancyDTO>>();
+            ResponseModel<List<VacancyDTO>> response = new ResponseModel<List<VacancyDTO>>() { Message = "Success"};
 
             try
             {
@@ -44,12 +44,18 @@ namespace Employment.Application.Services
                     response.MessageCodes = Enums.MessageCodes.Success;
                 }
                 else
+                {
                     response.MessageCodes = Enums.MessageCodes.NoDataFound;
+                    response.Message = "No Data Found";
+                }
+                    
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message, ex);
                 response.MessageCodes = Enums.MessageCodes.InternalServerError;
+                response.Message = "Internal Server Error";
+
             }
 
             return response;
@@ -57,7 +63,7 @@ namespace Employment.Application.Services
         }
         public async Task<ResponseModel<bool>> AddVacancy(VacancyDTO vacancyDTO)
         {
-            ResponseModel<bool> response = new ResponseModel<bool>() { Result = false };
+            ResponseModel<bool> response = new ResponseModel<bool>() { Result = false , Message = "Success"};
 
             try
             {
@@ -69,16 +75,16 @@ namespace Employment.Application.Services
                     response.MessageCodes = Enums.MessageCodes.Success;
                 }
                 else
-                {
-                    response.Result = false;
                     response.MessageCodes = Enums.MessageCodes.InternalServerError;
-                }
+                
                 
             }
             catch (Exception Ex)
             {
                 _logger.LogError(Ex.Message);
                 response.MessageCodes = Enums.MessageCodes.InternalServerError;
+                response.Message = "Internal Server Error";
+
 
             }
             return response;
@@ -86,7 +92,7 @@ namespace Employment.Application.Services
 
         public async Task<ResponseModel<bool>> EditVacancy(VacancyDTO vacancyDTO)
         {
-            ResponseModel<bool> response = new ResponseModel<bool>() { Result = false};
+            ResponseModel<bool> response = new ResponseModel<bool>() { Result = false , Message = "Success"};
             
             try
             {
@@ -98,16 +104,24 @@ namespace Employment.Application.Services
                         response.Result = true;
                         response.MessageCodes = Enums.MessageCodes.Success;
                     }
+                    else
+                    {
+                        response.MessageCodes = Enums.MessageCodes.NoDataFound;
+                        response.Message = " No Data Found";
+                    }
+
                 }
                 else
                 {
                     response.MessageCodes = Enums.MessageCodes.BadRequest;
+                    response.Message = "Bad Request";
                 }
             }
             catch (Exception Ex)
             {
                 _logger.LogError(Ex.Message);
                 response.MessageCodes = Enums.MessageCodes.InternalServerError;
+                response.Message = "Internal Server Error";
 
             }
             return response;
@@ -115,7 +129,7 @@ namespace Employment.Application.Services
 
         public async Task<ResponseModel<bool>> DeleteVacancy(int vacancyId)
         {
-            ResponseModel<bool> response = new ResponseModel<bool>() { Result = false };
+            ResponseModel<bool> response = new ResponseModel<bool>() { Result = false , Message = "Success" };
 
             try
             {
@@ -128,15 +142,26 @@ namespace Employment.Application.Services
                         response.MessageCodes = Enums.MessageCodes.Success;
                     }
                     else
-                        response.MessageCodes = Enums.MessageCodes.InternalServerError;
+                    {
+                        response.MessageCodes = Enums.MessageCodes.NoDataFound;
+                        response.Message = "No Data Found";
+
+                    }
                 }
                 else
+                {
                     response.MessageCodes = Enums.MessageCodes.BadRequest;
+                    response.Message = "Bad Request";
+
+                }
+                
             }
             catch (Exception Ex)
             {
                 _logger.LogError(Ex.Message);
                 response.MessageCodes = Enums.MessageCodes.InternalServerError;
+                response.Message = "Internal Server Error";
+
 
             }
             return response;
@@ -144,7 +169,7 @@ namespace Employment.Application.Services
 
         public async Task<ResponseModel<bool>> DeactivateVacancy(int vacancyId)
         {
-			ResponseModel<bool> response = new ResponseModel<bool>() { Result = false };
+			ResponseModel<bool> response = new ResponseModel<bool>() { Result = false , Message = "Success" };
 
 			try
 			{
@@ -158,23 +183,31 @@ namespace Employment.Application.Services
 					}
 					else
 					{
-						response.MessageCodes = Enums.MessageCodes.BadRequest;
-					}
+                        response.MessageCodes = Enums.MessageCodes.NoDataFound;
+                        response.Message = "No Data Found";
+                    }
 				}
+                else
+                {
+                    response.MessageCodes = Enums.MessageCodes.BadRequest;
+                    response.Message = "Bad Request";
+                }
 
             }
             catch (Exception Ex)
             {
                 _logger.LogError(Ex.Message);
 				response.MessageCodes = Enums.MessageCodes.InternalServerError;
-			}
-			return response;
+                response.Message = "Internal Server Error";
+
+            }
+            return response;
 
 		}
 
 		public async Task<ResponseModel<bool>> PostVacancy(int vacancyId)
         {
-			ResponseModel<bool> response = new ResponseModel<bool>() { Result = false };
+			ResponseModel<bool> response = new ResponseModel<bool>() { Result = false, Message = "Success" };
 
 			try
 			{
@@ -188,10 +221,16 @@ namespace Employment.Application.Services
 					}
 					else
 					{
-						response.MessageCodes = Enums.MessageCodes.BadRequest;
-					}
+						response.MessageCodes = Enums.MessageCodes.NoDataFound;
+                        response.Message = "No Data Found";
+                    }
 
 				}
+                else
+                {
+                    response.MessageCodes = Enums.MessageCodes.BadRequest;
+                    response.Message = "Bad Request";
+                }
 
             }
             catch (Exception Ex)
@@ -199,15 +238,17 @@ namespace Employment.Application.Services
                 _logger.LogError(Ex.Message);
 
 				response.MessageCodes = Enums.MessageCodes.InternalServerError;
-			}
-			return response;
+                response.Message = "Internal Server Error";
+
+            }
+            return response;
 
 		}
 
 
         public ResponseModel<bool> CheckApplicationMaxNumber(int vacancyId)
         {
-            ResponseModel<bool> response = new ResponseModel<bool>() { Result = false };
+            ResponseModel<bool> response = new ResponseModel<bool>() { Result = true };
 
             try
             {
@@ -216,7 +257,7 @@ namespace Employment.Application.Services
                 {
                     if (vacancy.CurrentNumberOfApplication >= vacancy.MaxNumberOfApplications)
                     {
-                        response.Result = true;
+                        response.Result = false;
                         response.MessageCodes = Enums.MessageCodes.InvalidMaxNumberOfApplication;
                         response.Message = "This Vacancy Has Reached The Maximum Number Of Applications";
                     }
@@ -228,6 +269,8 @@ namespace Employment.Application.Services
             {
                 _logger.LogError(Ex.Message);
                 response.MessageCodes = Enums.MessageCodes.InternalServerError;
+                response.Message = "Internal Server Error";
+
             }
             return response;
 

@@ -24,6 +24,7 @@ using Employment.Services.Api.AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Employment.Domain.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -81,24 +82,6 @@ var mapperConfig = new MapperConfiguration(mc =>
 IMapper mapper = mapperConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);
 
-//#region JWT 
-//builder.Services.AddAuthentication(options =>
-//{
-//    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-//    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-//}).AddJwtBearer(options =>
-//{
-//    options.RequireHttpsMetadata = false;
-//    options.SaveToken = true;
-//    options.TokenValidationParameters = new TokenValidationParameters
-//    {
-//        ValidateIssuerSigningKey = true,
-//        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Key"])),
-//        ValidateIssuer = false,
-//        ValidateAudience = false
-//    };
-//});
-//#endregion
 
 builder.Services.AddAuthorization();
 
@@ -114,6 +97,8 @@ builder.Services.AddScoped<IVacancyRepository, VacancyRepository>();
 builder.Services.AddScoped<IVacanciesApplicationRepository, VacanciesApplicationRepository>();
 builder.Services.AddScoped<IdentityEmploymentContext>();
 
+//DBContext
+builder.Services.AddScoped<EmploymentContext>();
 
 var app = builder.Build();  
 

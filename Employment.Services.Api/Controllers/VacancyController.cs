@@ -250,6 +250,7 @@ namespace Employment.Services.Api.Controllers
                     _logger.LogInformation("ModelState Is Valid");
 
                     string? userID = GetTokenData();
+
                     if (string.IsNullOrEmpty(userID))
                     {
                         return Unauthorized();
@@ -257,17 +258,19 @@ namespace Employment.Services.Api.Controllers
                     var result = await _vacanciesApplicationService.ApplytoVacancy(userID, vacancyId);
                     if (result.Result)
                     {
-                        return StatusCode(StatusCodes.Status200OK, true);
+                        return StatusCode(StatusCodes.Status200OK, result);
                     }
                     else
                     {
-                        //return StatusCode(StatusCodes.Status400BadRequest);
-                        AddError("Request is not valid");
-                        return CustomResponse();
+                        return StatusCode(StatusCodes.Status400BadRequest, result);
                     }
                 }
-                _logger.LogInformation("End ApplytoVacancy API");
-                return StatusCode(StatusCodes.Status400BadRequest);
+                else
+                {
+                    _logger.LogInformation("End ApplytoVacancy API");
+                    return StatusCode(StatusCodes.Status400BadRequest);
+                }
+                
 
             }
             catch (Exception ex)

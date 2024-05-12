@@ -2,6 +2,7 @@
 using Employment.Domain.IRepository;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
+using NetDevPack.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,8 +33,9 @@ namespace Employment.Infra.Data.Repository
 
         public T GetById(DbContext _context, int id)
         {
-            return _context.Find<T>(id);
-
+            var entity = _context.Find<T>(id);
+            _context.Entry(entity).State = EntityState.Detached;
+            return entity;
         }
 
         public bool Insert(DbContext _context, T _obj)

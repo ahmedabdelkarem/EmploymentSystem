@@ -18,7 +18,7 @@ namespace Employment.Application.DTOs
 
         public DateTime? ExpirationDate { get; set; }
 
-        public int? NumberOfApplications { get; set; }
+        public int? MaxNumberOfApplications { get; set; }
 
         public bool? IsExpired { get; set; }
 

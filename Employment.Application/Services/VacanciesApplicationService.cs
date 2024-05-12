@@ -64,6 +64,7 @@ namespace Employment.Application.Services
                 { 
                     response.Result = false;
                     response.MessageCodes = Enums.MessageCodes.BadRequest;
+                    response.Message = "Bad Request";
                 }
             }
             catch (Exception Ex)
@@ -76,7 +77,7 @@ namespace Employment.Application.Services
 
         public async Task<ResponseModel<List<string>>>  GetAllVacancyApplicants(int vacancyId)
         {
-            ResponseModel<List<string>> response = new ResponseModel<List<string>>();
+            ResponseModel<List<string>> response = new ResponseModel<List<string>>() {  Result = new List<string>()} ;
 
             try
             {
@@ -90,11 +91,16 @@ namespace Employment.Application.Services
                         response.MessageCodes = Enums.MessageCodes.Success;
                     }
                     else
+                    {
                         response.MessageCodes = Enums.MessageCodes.NoDataFound;
+                        response.Message = "Data Not Found";
+                    }
+                        
                 }
                 else
                 {
                     response.MessageCodes = Enums.MessageCodes.BadRequest;
+                    response.Message = "Bad Request";
                 }
             }
             catch (Exception Ex)
@@ -119,25 +125,25 @@ namespace Employment.Application.Services
                 var checkApplicationMaxTime = CheckApplicationMaxTime(userId);
                 var checkApplicationMaxNumber = _vacancyService.CheckApplicationMaxNumber(vacancyId);
 
-                if (CheckApplicationExist(userId, vacancyId).Result)
+                if (!CheckApplicationExist(userId, vacancyId).Result)
                 {
                     response.Result = applicationExistResult.Result;
                     response.MessageCodes = applicationExistResult.MessageCodes;
                     response.Message = applicationExistResult.Message;
                     return response;
                 }
-                else if (CheckApplicationMaxTime(userId).Result)
+                else if (!CheckApplicationMaxTime(userId).Result)
                 {
-                    response.Result = applicationExistResult.Result;
-                    response.MessageCodes = applicationExistResult.MessageCodes;
-                    response.Message = applicationExistResult.Message;
+                    response.Result = checkApplicationMaxTime.Result;
+                    response.MessageCodes = checkApplicationMaxTime.MessageCodes;
+                    response.Message = checkApplicationMaxTime.Message;
                     return response;
                 }
                 else if (!_vacancyService.CheckApplicationMaxNumber(vacancyId).Result)
                 {
-                    response.Result = applicationExistResult.Result;
-                    response.MessageCodes = applicationExistResult.MessageCodes;
-                    response.Message = applicationExistResult.Message;
+                    response.Result = checkApplicationMaxNumber.Result;
+                    response.MessageCodes = checkApplicationMaxNumber.MessageCodes;
+                    response.Message = checkApplicationMaxNumber.Message;
                     return response;
                 }
 
@@ -155,13 +161,13 @@ namespace Employment.Application.Services
 
         private ResponseModel<bool> CheckApplicationExist(string userId, int vacancyId)
         {
-            ResponseModel<bool> response = new ResponseModel<bool>() { Result = false};
+            ResponseModel<bool> response = new ResponseModel<bool>() { Result = true};
             try
             {
                 var results = _vacanciesApplicationRepository.CheckApplicationExist(userId, vacancyId);
                 if (results != null && results.Count > 0)
                 {
-                    response.Result = true;
+                    response.Result = false;
                     response.MessageCodes = Enums.MessageCodes.DataFound;
                     response.Message = "Vacancy Application Already Exist";
                 }
@@ -182,14 +188,14 @@ namespace Employment.Application.Services
 
         private ResponseModel<bool> CheckApplicationMaxTime(string userId)
         {
-            ResponseModel<bool> response = new ResponseModel<bool>() { Result = false };
+            ResponseModel<bool> response = new ResponseModel<bool>() { Result = true };
 
             try
             {
                 var results = _vacanciesApplicationRepository.CheckApplicationMaxTime(userId);
                 if (results != null && results.Count > 0)
                 {
-                    response.Result = true;
+                    response.Result = false;
                     response.MessageCodes = Enums.MessageCodes.ApplicationExistTodayWithSameApplicant;
                     response.Message = "Another Application Already Exist Today For Same Applicant";
                 }
