@@ -20,11 +20,9 @@ namespace Employment.Application.Services
 			_cacheService = cacheService;
         }
 
-		public void Dispose()
+        public void Dispose()
         {
-            throw new NotImplementedException();
         }
-
         public async Task<IEnumerable<UserDto>> GetAll()
         {
             try
@@ -61,24 +59,6 @@ namespace Employment.Application.Services
             }
         }
 
-        public Task<UserDto> GetById(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ValidationResult> Register(UserDto customerViewModel)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ValidationResult> Remove(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ValidationResult> Update(UserDto customerViewModel)
-        {
-            throw new NotImplementedException();
-        }
+      
     }
 }

@@ -9,7 +9,7 @@ public partial class Vacancy
 
     public string VacancyName { get; set; }
 
-    public int? CreatedBy { get; set; }
+    public string CreatedBy { get; set; }
 
     public DateTime? StartDate { get; set; }
 
@@ -24,6 +24,8 @@ public partial class Vacancy
     public bool? IsActive { get; set; }
 
     public int? CurrentNumberOfApplication { get; set; }
+
+    public virtual AspNetUser CreatedByNavigation { get; set; }
 
     public virtual ICollection<VacanciesApplication> VacanciesApplications { get; set; } = new List<VacanciesApplication>();
 }

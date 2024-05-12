@@ -53,7 +53,8 @@ namespace Employment.Services.Api.Controllers
                 UserName = registerUser.Email,
                 Email = registerUser.Email,
                 EmailConfirmed = true,
-
+                //Name = registerUser.Name,
+                //PhoneNumber = registerUser.PhoneNumber
             };
 
             var result = await _userManager.CreateAsync(user, registerUser.Password);
@@ -124,7 +125,9 @@ namespace Employment.Services.Api.Controllers
                 // create claims for the user
                 var claims = new List<Claim>
              {
-              new Claim(ClaimTypes.Name, user.UserName)
+              new Claim(ClaimTypes.Name, user.UserName),
+              new Claim(ClaimTypes.NameIdentifier, user.Id)
+
              };
 
                 var roles = await _userManager.GetRolesAsync(user);

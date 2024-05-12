@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using AutoMapper;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
@@ -67,6 +68,11 @@ namespace Employment.Services.Api.Controllers
         protected void ClearErrors()
         {
             _errors.Clear();
+        }
+        protected string? GetTokenData()
+        {
+            string? userId = User.Claims.FirstOrDefault(o => o.Type == ClaimTypes.NameIdentifier)?.Value.ToString();
+            return userId;
         }
     }
 }

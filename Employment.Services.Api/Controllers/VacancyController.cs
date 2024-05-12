@@ -9,7 +9,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using System.Net;
-
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using Employment.Domain.Common;
+using static MassTransit.ValidationResultExtensions;
 
 namespace Employment.Services.Api.Controllers
 {
@@ -30,7 +32,7 @@ namespace Employment.Services.Api.Controllers
         }
 
 
-        [AllowAnonymous]
+        [Authorize(Roles = "Employer")]
         [HttpGet("GetAllVacancies")]
         public async Task<IActionResult> GetAllVacancies()
         {
@@ -38,26 +40,20 @@ namespace Employment.Services.Api.Controllers
             {
                 _logger.LogInformation("Begin GetAllVacancies API");
 
-                var result = _mapper.Map<List<VacancyModel>>(await _vacancyService.GetAllVacancies());
+                var result = await _vacancyService.GetAllVacancies();
 
-                if (result != null && result.Count > 0)
-                {
-                    _logger.LogInformation("End GetAllVacancies API");
-                    return StatusCode(StatusCodes.Status200OK, result);
-                }
-                else
-                {
-                    _logger.LogInformation("End GetAllVacancies API");
-                    return StatusCode(StatusCodes.Status500InternalServerError);
-                }
+                return StatusCode(Convert.ToInt16(result.MessageCodes), result);
+
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status400BadRequest, ex.Message);
+                _logger.LogError(ex.Message, ex);
+
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = "Employer")]
         [HttpPost("AddVacancy")]
         public async Task<IActionResult> AddVacancy(VacancyModel vacancyModel)
         {
@@ -69,27 +65,28 @@ namespace Employment.Services.Api.Controllers
                 {
                     _logger.LogInformation("ModelState Is Valid");
 
-                    if (await _vacancyService.AddVacancy(_mapper.Map<VacancyDTO>(vacancyModel)))
-                    {
-                        return StatusCode(StatusCodes.Status200OK, true);
-                    }
-                    else
-                    {
-                        return StatusCode(StatusCodes.Status500InternalServerError);
-                    }
+                    var result = await _vacancyService.AddVacancy(_mapper.Map<VacancyDTO>(vacancyModel));
+
+                    return StatusCode(Convert.ToInt16(result.MessageCodes), result);
 
                 }
-                _logger.LogInformation("End AddVacancy API");
-                return StatusCode(StatusCodes.Status400BadRequest);
+                else
+                {
+                    _logger.LogInformation("End AddVacancy API");
+                    return StatusCode(StatusCodes.Status400BadRequest);
+                }
+
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status400BadRequest, ex.Message);
+                _logger.LogError(ex.Message, ex);
+
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
 
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = "Employer")]
         [HttpPut("EditVacancy")]
         public async Task<IActionResult> EditVacancy(VacancyModel vacancyModel)
         {
@@ -101,14 +98,9 @@ namespace Employment.Services.Api.Controllers
                 {
                     _logger.LogInformation("ModelState Is Valid");
 
-                    if (await _vacancyService.EditVacancy(_mapper.Map<VacancyDTO>(vacancyModel)))
-                    {
-                        return StatusCode(StatusCodes.Status200OK, true);
-                    }
-                    else
-                    {
-                        return StatusCode(StatusCodes.Status500InternalServerError);
-                    }
+                    var result = await _vacancyService.EditVacancy(_mapper.Map<VacancyDTO>(vacancyModel));
+                     return StatusCode(Convert.ToInt16(result.MessageCodes), result);
+
                 }
                 _logger.LogInformation("End EditVacancy API");
                 return StatusCode(StatusCodes.Status400BadRequest);
@@ -116,13 +108,14 @@ namespace Employment.Services.Api.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message, ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
 
             }
 
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = "Employer")]
         [HttpDelete("DeleteVacancy")]
         public async Task<IActionResult> DeleteVacancy(int vacancyId)
         {
@@ -130,26 +123,26 @@ namespace Employment.Services.Api.Controllers
             {
                 _logger.LogInformation("Begin DeleteVacancy API");
 
-                if (await _vacancyService.DeleteVacancy(vacancyId))
+                if (ModelState.IsValid)
                 {
-                    _logger.LogInformation("End DeleteVacancy API");
-                    return StatusCode(StatusCodes.Status200OK, true);
+                    var result = await _vacancyService.DeleteVacancy(vacancyId);
+
+                    return StatusCode(Convert.ToInt16(result.MessageCodes), result);
                 }
                 else
                 {
                     _logger.LogInformation("End DeleteVacancy API");
                     return StatusCode(StatusCodes.Status400BadRequest);
                 }
-
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message, ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
 
         }
 
-        //[AllowAnonymous]
         [Authorize(Roles = "Employer")]
         [HttpPost("PostVacancy")]
         public async Task<IActionResult> PostVacancy(int vacancyId)
@@ -158,9 +151,6 @@ namespace Employment.Services.Api.Controllers
             try
             {
                 _logger.LogInformation("Begin PostVacancy API");
-
-
-                _logger.LogInformation("ModelState Is Valid");
 
                 if (await _vacancyService.PostVacancy(vacancyId))
                 {
@@ -178,6 +168,8 @@ namespace Employment.Services.Api.Controllers
             }
             catch (Exception ex)
             {
+
+                _logger.LogError(ex.Message, ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
 
             }
@@ -185,7 +177,7 @@ namespace Employment.Services.Api.Controllers
 
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = "Employer")]
         [HttpPost("DeactivateVacancy")]
         public async Task<IActionResult> DeactivateVacancy(int vacancyId)
         {
@@ -193,7 +185,6 @@ namespace Employment.Services.Api.Controllers
             {
                 _logger.LogInformation("Begin DeactivateVacancy API");
 
-                _logger.LogInformation("ModelState Is Valid");
 
                 if (await _vacancyService.DeactivateVacancy(vacancyId))
                 {
@@ -208,46 +199,14 @@ namespace Employment.Services.Api.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message, ex);
+
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
 
         }
 
-        [AllowAnonymous]
-        [HttpPost("ApplytoVacancy")]
-        public async Task<IActionResult> ApplytoVacancy(string userId, int vacancyId)
-        {
-            try
-            {
-                _logger.LogInformation("Begin ApplytoVacancy API");
-
-                if (ModelState.IsValid)
-                {
-                    _logger.LogInformation("ModelState Is Valid");
-
-                    if (await _vacanciesApplicationService.ApplytoVacancy(userId, vacancyId))
-                    {
-                        return StatusCode(StatusCodes.Status200OK, true);
-                    }
-                    else
-                    {
-                        return StatusCode(StatusCodes.Status500InternalServerError);
-                    }
-                }
-                _logger.LogInformation("End ApplytoVacancy API");
-                return StatusCode(StatusCodes.Status400BadRequest);
-
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-
-            }
-
-
-        }
-
-        [AllowAnonymous]
+        [Authorize(Roles = "Employer")]
         [HttpGet("GetAllVacancyApplicants")]
         public async Task<IActionResult> GetAllVacancyApplicants(int vacancyId)
         {
@@ -266,16 +225,62 @@ namespace Employment.Services.Api.Controllers
                 else
                 {
                     _logger.LogInformation("End GetAllVacancyApplicants API");
-                    return StatusCode(StatusCodes.Status400BadRequest);
+                    return StatusCode(StatusCodes.Status200OK, result);
                 }
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message, ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
 
             }
 
         }
+
+        [Authorize(Roles = "Applicant")]
+        [HttpPost("ApplytoVacancy")]
+        public async Task<IActionResult> ApplytoVacancy(int vacancyId)
+        {
+            try
+            {
+                _logger.LogInformation("Begin ApplytoVacancy API");
+
+                if (ModelState.IsValid)
+                {
+                    _logger.LogInformation("ModelState Is Valid");
+
+                    string? userID = GetTokenData();
+                    if (string.IsNullOrEmpty(userID))
+                    {
+                        return Unauthorized();
+                    }
+
+                    if (await _vacanciesApplicationService.ApplytoVacancy(userID, vacancyId))
+                    {
+                        return StatusCode(StatusCodes.Status200OK, true);
+                    }
+                    else
+                    {
+                        //return StatusCode(StatusCodes.Status400BadRequest);
+                        AddError("Request is not valid");
+                        return CustomResponse();
+                    }
+                }
+                _logger.LogInformation("End ApplytoVacancy API");
+                return StatusCode(StatusCodes.Status400BadRequest);
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+
+            }
+
+
+        }
+
+
     }
 }
 

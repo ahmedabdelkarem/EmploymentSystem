@@ -9,11 +9,8 @@ namespace Employment.Application.IServices
     public interface IUserService : IDisposable
     {
         Task<IEnumerable<UserDto>> GetAll();
-        Task<UserDto> GetById(Guid id);
         
-        Task<ValidationResult> Register(UserDto customerViewModel);
-        Task<ValidationResult> Update(UserDto customerViewModel);
-        Task<ValidationResult> Remove(Guid id);
+       
 
     }
 }

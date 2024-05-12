@@ -32,12 +32,23 @@ namespace Employment.Infra.Data.Repository
 
         public async Task<bool> EditVacancy(Vacancy vacancy)
         {
-            return Update(_dbContext, vacancy);
+            var result = GetById(_dbContext, vacancy.Id);
+            if (result != null)
+            {
+                return Update(_dbContext, vacancy);
+            }
+            return false;
         }
 
         public async Task<bool> DeleteVacancy(int vacancyId)
         {
-            return Delete(_dbContext, vacancyId);
+            var result = GetById(_dbContext, vacancyId);
+            if (result != null)
+            {
+                return Delete(_dbContext, vacancyId);
+            }
+            return false;
+
         }
 
         public async Task<bool> DeactivateVacancy(int vacancyId)
@@ -51,7 +62,7 @@ namespace Employment.Infra.Data.Repository
             return false;
         }
 
-       
+
 
         public async Task<bool> PostVacancy(int vacancyId)
         {
@@ -63,7 +74,7 @@ namespace Employment.Infra.Data.Repository
             }
             return false;
         }
-       
+
         public Vacancy GetVacancyById(int vacancyId)
         {
             var vacancy = GetById(_dbContext, vacancyId);
@@ -71,10 +82,10 @@ namespace Employment.Infra.Data.Repository
 
 
         }
-		
 
 
-	}
+
+    }
 }
 
 

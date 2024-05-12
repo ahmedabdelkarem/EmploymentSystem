@@ -7,7 +7,7 @@ public partial class VacanciesApplication
 {
     public int Id { get; set; }
 
-    public int? FkVacancyId { get; set; }
+    public int FkVacancyId { get; set; }
 
     public string FkApplicantId { get; set; }
 

@@ -51,12 +51,15 @@ public partial class EmploymentContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.ConcurrencyStamp)
+                .IsRequired()
                 .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.Name)
+                .IsRequired()
                 .HasMaxLength(256)
                 .IsUnicode(false);
             entity.Property(e => e.NormalizedName)
+                .IsRequired()
                 .HasMaxLength(256)
                 .IsUnicode(false);
         });
@@ -66,9 +69,11 @@ public partial class EmploymentContext : DbContext
             entity.HasIndex(e => e.RoleId, "IX_AspNetRoleClaims_RoleId");
 
             entity.Property(e => e.ClaimType)
+                .IsRequired()
                 .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.ClaimValue)
+                .IsRequired()
                 .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.RoleId)
@@ -91,30 +96,37 @@ public partial class EmploymentContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.ConcurrencyStamp)
+                .IsRequired()
                 .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.Email)
+                .IsRequired()
                 .HasMaxLength(256)
                 .IsUnicode(false);
             entity.Property(e => e.Name)
                 .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.NormalizedEmail)
+                .IsRequired()
                 .HasMaxLength(256)
                 .IsUnicode(false);
             entity.Property(e => e.NormalizedUserName)
+                .IsRequired()
                 .HasMaxLength(256)
                 .IsUnicode(false);
             entity.Property(e => e.PasswordHash)
+                .IsRequired()
                 .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.PhoneNumber)
                 .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.SecurityStamp)
+                .IsRequired()
                 .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.UserName)
+                .IsRequired()
                 .HasMaxLength(256)
                 .IsUnicode(false);
 
@@ -142,9 +154,11 @@ public partial class EmploymentContext : DbContext
             entity.HasIndex(e => e.UserId, "IX_AspNetUserClaims_UserId");
 
             entity.Property(e => e.ClaimType)
+                .IsRequired()
                 .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.ClaimValue)
+                .IsRequired()
                 .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.UserId)
@@ -168,6 +182,7 @@ public partial class EmploymentContext : DbContext
                 .HasMaxLength(128)
                 .IsUnicode(false);
             entity.Property(e => e.ProviderDisplayName)
+                .IsRequired()
                 .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.UserId)
@@ -192,6 +207,7 @@ public partial class EmploymentContext : DbContext
                 .HasMaxLength(128)
                 .IsUnicode(false);
             entity.Property(e => e.Value)
+                .IsRequired()
                 .HasMaxLength(100)
                 .IsUnicode(false);
 
@@ -200,9 +216,14 @@ public partial class EmploymentContext : DbContext
 
         modelBuilder.Entity<VacanciesApplication>(entity =>
         {
+            entity.HasIndex(e => e.FkApplicantId, "IX_VacanciesApplications_Fk_ApplicantId");
+
+            entity.HasIndex(e => e.FkVacancyId, "IX_VacanciesApplications_Fk_VacancyId");
+
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.ApplicationDate).HasColumnType("datetime");
             entity.Property(e => e.FkApplicantId)
+                .IsRequired()
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("Fk_ApplicantId");
@@ -221,11 +242,14 @@ public partial class EmploymentContext : DbContext
         {
             entity.ToTable("VacanciesApplications_ARC");
 
+            entity.HasIndex(e => e.FkApplicantId, "IX_VacanciesApplications_ARC_Fk_ApplicantId");
+
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
             entity.Property(e => e.ApplicationDate).HasColumnType("datetime");
             entity.Property(e => e.FkApplicantId)
+                .IsRequired()
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("Fk_ApplicantId");
@@ -245,16 +269,27 @@ public partial class EmploymentContext : DbContext
                 .HasColumnName("ID");
             entity.Property(e => e.ExpirationDate).HasColumnType("datetime");
             entity.Property(e => e.StartDate).HasColumnType("datetime");
-            entity.Property(e => e.VacancyName).HasMaxLength(200);
+            entity.Property(e => e.VacancyName)
+                .IsRequired()
+                .HasMaxLength(200);
         });
 
         modelBuilder.Entity<Vacancy>(entity =>
         {
             entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(100)
+                .IsUnicode(false);
             entity.Property(e => e.CurrentNumberOfApplication).HasDefaultValueSql("((0))");
             entity.Property(e => e.ExpirationDate).HasColumnType("datetime");
             entity.Property(e => e.StartDate).HasColumnType("datetime");
-            entity.Property(e => e.VacancyName).HasMaxLength(200);
+            entity.Property(e => e.VacancyName)
+                .IsRequired()
+                .HasMaxLength(200);
+
+            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.Vacancies)
+                .HasForeignKey(d => d.CreatedBy)
+                .HasConstraintName("FK_Vacancies_AspNetUsers");
         });
 
         OnModelCreatingPartial(modelBuilder);
