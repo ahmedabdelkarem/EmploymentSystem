@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Employment.Domain.Entities;
 
-using NetDevPack.Data;
-
 namespace Employment.Domain.IRepository
 {
     public interface IUserRepository 

@@ -5,7 +5,6 @@ using Employment.Domain.Entities;
 using Employment.Domain.IRepository;
 using Employment.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
-using NetDevPack.Data;
 
 namespace Employment.Infra.Data.Repository
 {

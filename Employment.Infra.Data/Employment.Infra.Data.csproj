@@ -13,12 +13,12 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="NetDevPack" Version="6.1.0" />
     <PackageReference Include="NetDevPack.Identity" Version="6.0.5" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Employment.Domain.Core\Employment.Domain.Core.csproj" />
     <ProjectReference Include="..\Employment.Domain\Employment.Domain.csproj" />
   </ItemGroup>
 
