@@ -151,31 +151,27 @@ namespace Employment.Services.Api.Controllers
             try
             {
                 _logger.LogInformation("Begin PostVacancy API");
-
-                if (await _vacancyService.PostVacancy(vacancyId))
+				if (ModelState.IsValid)
                 {
-                    _logger.LogInformation("End PostVacancy API");
-                    return StatusCode(StatusCodes.Status200OK, true);
-                }
-                else
-                {
-                    _logger.LogInformation("End PostVacancy API");
-                    return StatusCode(StatusCodes.Status400BadRequest);
-                }
+					_logger.LogInformation("valid Model");
+					var result = await _vacancyService.PostVacancy(vacancyId);
+					return StatusCode(Convert.ToInt16(result.MessageCodes), result);
+				}
+				_logger.LogInformation("Invalid Model");
 
+				_logger.LogInformation("End PostVacancy API");
+				return StatusCode(StatusCodes.Status400BadRequest);
 
-
-            }
-            catch (Exception ex)
+			}
+			catch (Exception ex)
             {
-
                 _logger.LogError(ex.Message, ex);
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+				return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
 
-            }
+			}
 
 
-        }
+		}
 
         [Authorize(Roles = "Employer")]
         [HttpPost("DeactivateVacancy")]
@@ -185,19 +181,20 @@ namespace Employment.Services.Api.Controllers
             {
                 _logger.LogInformation("Begin DeactivateVacancy API");
 
+				if (ModelState.IsValid)
+                {
+                    _logger.LogInformation("Valid Model");
+                    var result = await _vacancyService.DeactivateVacancy(vacancyId);
 
-                if (await _vacancyService.DeactivateVacancy(vacancyId))
-                {
+					return StatusCode(Convert.ToInt16(result.MessageCodes), result);
+				}
+
+                    _logger.LogInformation("Invalid Model");
                     _logger.LogInformation("End DeactivateVacancy API");
-                    return StatusCode(StatusCodes.Status200OK, true);
-                }
-                else
-                {
-                    _logger.LogInformation("End DeactivateVacancy API");
-                    return StatusCode(StatusCodes.Status400BadRequest);
-                }
-            }
-            catch (Exception ex)
+				return StatusCode(StatusCodes.Status400BadRequest);
+
+			}
+			catch (Exception ex)
             {
                 _logger.LogError(ex.Message, ex);
 
