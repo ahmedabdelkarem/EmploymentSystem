@@ -10,11 +10,11 @@ namespace Employment.Domain.Common
     {
         public enum MessageCodes
         {
-            Success,
-            NoDataFound,
-            BadRequest,
-            InvalidMaxNumberOfApplication,
-            InternalServerError
+            Success = 1,
+            NoDataFound = 2,
+            BadRequest = 3,
+            InvalidMaxNumberOfApplication = 4,
+            InternalServerError =5
         }
     }
 }

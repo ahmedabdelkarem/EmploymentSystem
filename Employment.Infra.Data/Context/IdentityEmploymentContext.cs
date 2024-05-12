@@ -5,8 +5,6 @@ using FluentValidation.Results;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using NetDevPack.Data;
-using NetDevPack.Domain;
-using NetDevPack.Mediator;
 using NetDevPack.Messaging;
 
 namespace Employment.Infra.Data.Context

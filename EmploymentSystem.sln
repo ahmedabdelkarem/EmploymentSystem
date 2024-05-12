@@ -5,15 +5,13 @@ VisualStudioVersion = 17.6.33801.468
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Employment.Application", "Employment.Application\Employment.Application.csproj", "{10206A5E-0274-4EF8-B5FC-72C5A6DBAF2E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Employment.UI.Web", "Employment.UI.Web\Employment.UI.Web.csproj", "{091C33F7-24F1-4D73-8CCD-20B12BD63697}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Employment.UI.Web", "Employment.UI.Web\Employment.UI.Web.csproj", "{091C33F7-24F1-4D73-8CCD-20B12BD63697}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Employment.Domain", "Employment.Domain\Employment.Domain.csproj", "{E7EF2EAA-0929-40D0-B1EC-247B9B788F72}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Employment.Domain", "Employment.Domain\Employment.Domain.csproj", "{E7EF2EAA-0929-40D0-B1EC-247B9B788F72}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Employment.Domain.Core", "Employment.Domain.Core\Employment.Domain.Core.csproj", "{11529914-79B8-49CE-B504-6B6ECE75BCAC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Employment.Infra.Data", "Employment.Infra.Data\Employment.Infra.Data.csproj", "{1386449A-D4F2-40BF-B81A-E407EBB4B0B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Employment.Infra.Data", "Employment.Infra.Data\Employment.Infra.Data.csproj", "{1386449A-D4F2-40BF-B81A-E407EBB4B0B6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Employment.Services.Api", "Employment.Services.Api\Employment.Services.Api.csproj", "{6A5F1155-0798-416B-8220-464EB7FE6B55}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Employment.Services.Api", "Employment.Services.Api\Employment.Services.Api.csproj", "{6A5F1155-0798-416B-8220-464EB7FE6B55}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,10 +31,6 @@ Global
 		{E7EF2EAA-0929-40D0-B1EC-247B9B788F72}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E7EF2EAA-0929-40D0-B1EC-247B9B788F72}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E7EF2EAA-0929-40D0-B1EC-247B9B788F72}.Release|Any CPU.Build.0 = Release|Any CPU
-		{11529914-79B8-49CE-B504-6B6ECE75BCAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{11529914-79B8-49CE-B504-6B6ECE75BCAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{11529914-79B8-49CE-B504-6B6ECE75BCAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{11529914-79B8-49CE-B504-6B6ECE75BCAC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1386449A-D4F2-40BF-B81A-E407EBB4B0B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1386449A-D4F2-40BF-B81A-E407EBB4B0B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1386449A-D4F2-40BF-B81A-E407EBB4B0B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
