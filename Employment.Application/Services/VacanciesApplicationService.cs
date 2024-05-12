@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using Azure;
 using Employment.Application.DTOs;
 using Employment.Application.IServices;
 using Employment.Application.ViewModels;
+using Employment.Domain.Common;
 using Employment.Domain.Entities;
 using Employment.Domain.IRepository;
 using Employment.Infra.Data.Repository;
@@ -27,13 +29,16 @@ namespace Employment.Application.Services
             _vacancyService = vacancyService;
         }
 
-        public async Task<bool> ApplytoVacancy(string userId, int vacancyId)
+        public async Task<ResponseModel<bool>> ApplytoVacancy(string userId, int vacancyId)
         {
+            ResponseModel<bool> response = new ResponseModel<bool>();
             try
             {
                 if ((!string.IsNullOrEmpty(userId)) && vacancyId != 0)
                 {
-                    if (ValidateApplication(userId, vacancyId))
+                    response = ValidateApplication(userId, vacancyId);
+
+                    if (response.Result)
                     {
                         VacanciesApplicationDTO dto = new VacanciesApplicationDTO
                         {
@@ -42,106 +47,166 @@ namespace Employment.Application.Services
                             FkVacancyId = vacancyId
 
                         };
-                        return await _vacanciesApplicationRepository.ApplytoVacancy(_mapper.Map<VacanciesApplication>(dto));
+
+                        var result = await _vacanciesApplicationRepository.ApplytoVacancy(_mapper.Map<VacanciesApplication>(dto));
+                        if (result)
+                        {
+                            response.Result = true;
+                            response.MessageCodes = Enums.MessageCodes.Success;
+                        }
+                        else
+                            response.MessageCodes = Enums.MessageCodes.InternalServerError;
+
                     }
-
-
-
+                   
                 }
-                return false;
-
+                else
+                { 
+                    response.Result = false;
+                    response.MessageCodes = Enums.MessageCodes.BadRequest;
+                }
             }
             catch (Exception Ex)
             {
-                _logger.LogError(Ex.Message,Ex);
-
-                throw;
+                _logger.LogError(Ex.Message);
+                response.MessageCodes = Enums.MessageCodes.InternalServerError;
             }
+            return response;
         }
 
-        public async Task<List<string>> GetAllVacancyApplicants(int vacancyId)
+        public async Task<ResponseModel<List<string>>>  GetAllVacancyApplicants(int vacancyId)
         {
+            ResponseModel<List<string>> response = new ResponseModel<List<string>>();
+
             try
             {
 
-                List<string> applicantsUser = new List<string>();
-
                 if (vacancyId != 0)
                 {
-                    applicantsUser = await _vacanciesApplicationRepository.GetAllVacancyApplicants(vacancyId);
+                    var result = await _vacanciesApplicationRepository.GetAllVacancyApplicants(vacancyId);
+                    if (result != null && result.Count > 0)
+                    {
+                        response.Result = result;
+                        response.MessageCodes = Enums.MessageCodes.Success;
+                    }
+                    else
+                        response.MessageCodes = Enums.MessageCodes.NoDataFound;
                 }
-                return applicantsUser;
+                else
+                {
+                    response.MessageCodes = Enums.MessageCodes.BadRequest;
+                }
             }
             catch (Exception Ex)
             {
                 _logger.LogError(Ex.Message,Ex);
+                response.MessageCodes = Enums.MessageCodes.InternalServerError;
 
-                throw;
             }
+            return response;
+
         }
 
 
         #region ValidationFunctions
-        private bool ValidateApplication(string userId, int vacancyId)
+        private ResponseModel<bool> ValidateApplication(string userId, int vacancyId)
         {
+            ResponseModel<bool> response = new ResponseModel<bool>() { Result = true};
             try
             {
-                //check Existence of same application with same vacancy
-                if (CheckApplicationExist(userId, vacancyId) || CheckApplicationMaxTime(userId) ||
-                                                            !_vacancyService.CheckApplicationMaxNumber(vacancyId))
+
+                var applicationExistResult = CheckApplicationExist(userId, vacancyId);
+                var checkApplicationMaxTime = CheckApplicationMaxTime(userId);
+                var checkApplicationMaxNumber = _vacancyService.CheckApplicationMaxNumber(vacancyId);
+
+                if (CheckApplicationExist(userId, vacancyId).Result)
                 {
-                    return false;
+                    response.Result = applicationExistResult.Result;
+                    response.MessageCodes = applicationExistResult.MessageCodes;
+                    response.Message = applicationExistResult.Message;
+                    return response;
+                }
+                else if (CheckApplicationMaxTime(userId).Result)
+                {
+                    response.Result = applicationExistResult.Result;
+                    response.MessageCodes = applicationExistResult.MessageCodes;
+                    response.Message = applicationExistResult.Message;
+                    return response;
+                }
+                else if (!_vacancyService.CheckApplicationMaxNumber(vacancyId).Result)
+                {
+                    response.Result = applicationExistResult.Result;
+                    response.MessageCodes = applicationExistResult.MessageCodes;
+                    response.Message = applicationExistResult.Message;
+                    return response;
                 }
 
-                return true;
+                response.MessageCodes = Enums.MessageCodes.Success;
 
             }
             catch (Exception Ex)
             {
-                _logger.LogError(Ex.Message,Ex);
-
-                throw;
+                _logger.LogError(Ex.Message);
+                response.MessageCodes = Enums.MessageCodes.InternalServerError;
             }
+
+            return response;
         }
 
-        private bool CheckApplicationExist(string userId, int vacancyId)
+        private ResponseModel<bool> CheckApplicationExist(string userId, int vacancyId)
         {
+            ResponseModel<bool> response = new ResponseModel<bool>() { Result = false};
             try
             {
                 var results = _vacanciesApplicationRepository.CheckApplicationExist(userId, vacancyId);
                 if (results != null && results.Count > 0)
                 {
-                    return true;
+                    response.Result = true;
+                    response.MessageCodes = Enums.MessageCodes.DataFound;
+                    response.Message = "Vacancy Application Already Exist";
                 }
-                return false;
+                else
+                {
+                    response.MessageCodes = Enums.MessageCodes.Success;
+                    response.Message = "Vacancy Application Not Exist";
 
+                }
             }
             catch (Exception Ex)
             {
-                _logger.LogError(Ex.Message,Ex);
-
-                throw;
+                _logger.LogError(Ex.Message);
+                response.MessageCodes = Enums.MessageCodes.InternalServerError;
             }
+            return response;
         }
 
-        private bool CheckApplicationMaxTime(string userId)
+        private ResponseModel<bool> CheckApplicationMaxTime(string userId)
         {
+            ResponseModel<bool> response = new ResponseModel<bool>() { Result = false };
+
             try
             {
                 var results = _vacanciesApplicationRepository.CheckApplicationMaxTime(userId);
                 if (results != null && results.Count > 0)
                 {
-                    return true;
+                    response.Result = true;
+                    response.MessageCodes = Enums.MessageCodes.ApplicationExistTodayWithSameApplicant;
+                    response.Message = "Another Application Already Exist Today For Same Applicant";
                 }
-                return false;
+                else
+                {
+                    response.MessageCodes = Enums.MessageCodes.Success;
+                    response.Message = "Application Not Exist Today For Same Applicant";
+                }
 
             }
             catch (Exception Ex)
             {
-                _logger.LogError(Ex.Message , Ex);
-
-                throw;
+                _logger.LogError(Ex.Message);
+                response.MessageCodes = Enums.MessageCodes.InternalServerError;
             }
+            return response;
+
         }
 
         #endregion

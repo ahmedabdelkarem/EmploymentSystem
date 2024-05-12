@@ -19,7 +19,7 @@ namespace Employment.Application.IServices
         Task<bool> PostVacancy(int vacancyId);
         Task<bool> DeactivateVacancy(int vacancyId);
 
-        bool CheckApplicationMaxNumber(int vacancyId);
+        ResponseModel<bool> CheckApplicationMaxNumber(int vacancyId);
 
 
 	}

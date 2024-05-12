@@ -99,11 +99,14 @@ namespace Employment.Services.Api.Controllers
                     _logger.LogInformation("ModelState Is Valid");
 
                     var result = await _vacancyService.EditVacancy(_mapper.Map<VacancyDTO>(vacancyModel));
-                     return StatusCode(Convert.ToInt16(result.MessageCodes), result);
+                    return StatusCode(Convert.ToInt16(result.MessageCodes), result);
 
                 }
-                _logger.LogInformation("End EditVacancy API");
-                return StatusCode(StatusCodes.Status400BadRequest);
+                else
+                {
+                    _logger.LogInformation("End EditVacancy API");
+                    return StatusCode(StatusCodes.Status400BadRequest);
+                }
 
             }
             catch (Exception ex)
@@ -217,7 +220,7 @@ namespace Employment.Services.Api.Controllers
 
 
                 var result = await _vacanciesApplicationService.GetAllVacancyApplicants(vacancyId);
-                if (result != null && result.Count > 0)
+                if (result != null && result.Result.Count() > 0)
                 {
                     _logger.LogInformation("End GetAllVacancyApplicants API");
                     return StatusCode(StatusCodes.Status200OK, result);

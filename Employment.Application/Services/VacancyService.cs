@@ -43,7 +43,8 @@ namespace Employment.Application.Services
                     response.Result = _mapper.Map<List<VacancyDTO>>(results);
                     response.MessageCodes = Enums.MessageCodes.Success;
                 }
-                response.MessageCodes = Enums.MessageCodes.NoDataFound;
+                else
+                    response.MessageCodes = Enums.MessageCodes.NoDataFound;
             }
             catch (Exception ex)
             {
@@ -67,8 +68,12 @@ namespace Employment.Application.Services
                     response.Result = true;
                     response.MessageCodes = Enums.MessageCodes.Success;
                 }
-                response.Result = false;
-                response.MessageCodes = Enums.MessageCodes.InternalServerError;
+                else
+                {
+                    response.Result = false;
+                    response.MessageCodes = Enums.MessageCodes.InternalServerError;
+                }
+                
             }
             catch (Exception Ex)
             {
@@ -122,9 +127,11 @@ namespace Employment.Application.Services
                         response.Result = true;
                         response.MessageCodes = Enums.MessageCodes.Success;
                     }
-                    response.MessageCodes = Enums.MessageCodes.InternalServerError;
+                    else
+                        response.MessageCodes = Enums.MessageCodes.InternalServerError;
                 }
-                response.MessageCodes = Enums.MessageCodes.BadRequest;
+                else
+                    response.MessageCodes = Enums.MessageCodes.BadRequest;
             }
             catch (Exception Ex)
             {
@@ -173,8 +180,10 @@ namespace Employment.Application.Services
         }
 
 
-        public bool CheckApplicationMaxNumber(int vacancyId)
+        public ResponseModel<bool> CheckApplicationMaxNumber(int vacancyId)
         {
+            ResponseModel<bool> response = new ResponseModel<bool>() { Result = false };
+
             try
             {
                 var vacancy = _vacancyRepository.GetVacancyById(vacancyId);
@@ -182,17 +191,20 @@ namespace Employment.Application.Services
                 {
                     if (vacancy.CurrentNumberOfApplication >= vacancy.MaxNumberOfApplications)
                     {
-                        return false;
+                        response.Result = true;
+                        response.MessageCodes = Enums.MessageCodes.InvalidMaxNumberOfApplication;
+                        response.Message = "This Vacancy Has Reached The Maximum Number Of Applications";
                     }
-                    return true;
                 }
-                return false;
+                else
+                    response.MessageCodes = Enums.MessageCodes.Success;
             }
             catch (Exception Ex)
             {
                 _logger.LogError(Ex.Message);
-                throw;
+                response.MessageCodes = Enums.MessageCodes.InternalServerError;
             }
+            return response;
 
 
         }
