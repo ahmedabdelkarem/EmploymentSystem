@@ -245,7 +245,13 @@ namespace Employment.Application.Services
 
 		}
 
+        #region ValidationFunction
 
+        /// <summary>
+        /// Check Maximum Number Of Application By VacancyId
+        /// </summary>
+        /// <param name="vacancyId"></param>
+        /// <returns></returns>
         public ResponseModel<bool> CheckApplicationMaxNumber(int vacancyId)
         {
             ResponseModel<bool> response = new ResponseModel<bool>() { Result = true };
@@ -264,8 +270,9 @@ namespace Employment.Application.Services
                 }
                 else
                 {
+                    response.Result = false;
                     response.MessageCodes = Enums.MessageCodes.NoDataFound;
-                    response.Message = "Data not found";
+                    response.Message = "Data Not Found";
                 }
                     
             }
@@ -281,6 +288,7 @@ namespace Employment.Application.Services
 
         }
 
+        #endregion
         public void Dispose()
         {
         }

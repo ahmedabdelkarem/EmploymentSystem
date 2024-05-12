@@ -119,6 +119,16 @@ namespace Employment.Application.Services
 
 
         #region ValidationFunctions
+
+        /// <summary>
+        /// Validate Application By :
+        /// 1- Check Existence Of Applicant User applied to vacancy By VacancyId & UserId
+        /// 2- Check That applicant not allowed to apply for more than one vacancy per day by UserId
+        /// 3- Check current number of application doesn't exceed the maximum number of application by VacancyId
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="vacancyId"></param>
+        /// <returns></returns>
         private ResponseModel<bool> ValidateApplication(string userId, int vacancyId)
         {
             ResponseModel<bool> response = new ResponseModel<bool>() { Result = true};
