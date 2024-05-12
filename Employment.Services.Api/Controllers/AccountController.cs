@@ -38,7 +38,7 @@ namespace Employment.Services.Api.Controllers
             _signInManager = signInManager;
             _appJwtSettings = appJwtSettings.Value;
 
-		}
+        }
 
         [HttpPost]
         [Route("register")]
@@ -58,71 +58,62 @@ namespace Employment.Services.Api.Controllers
 
             };
 
-            using (TransactionScope Scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+
+
+            var result = await _userManager.CreateAsync(user, registerUser.Password);
+            var RoleInsertionresult = await _userManager.AddToRoleAsync(user, registerUser.RoleName);
+            if (result.Succeeded && RoleInsertionresult.Succeeded)
             {
-                try
-                {
-                    var result = await _userManager.CreateAsync(user, registerUser.Password);
-                    var RoleInsertionresult = await _userManager.AddToRoleAsync(user, registerUser.RoleName);
-                    if (result.Succeeded && RoleInsertionresult.Succeeded)
-                    {
-                        _logger.LogInformation("result Succeeded");
-                        Scope.Complete();
-                        return CustomResponse(await GetFullJwt(user));
-                    }
-                    Scope.Dispose();
-                    _logger.LogInformation("After CreateAsync");
-
-
-                    _logger.LogInformation("Error count = " + result.Errors.Count());
-
-                    foreach (var error in result.Errors)
-                    {
-                        AddError(error.Description);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    AddError(ex.Message);
-                    Scope.Dispose();
-                }
-
-
-                return CustomResponse();
+                _logger.LogInformation("result Succeeded");
+                return CustomResponse(await GetFullJwt(user));
             }
+            _logger.LogInformation("After CreateAsync");
+
+
+            _logger.LogInformation("Error count = " + result.Errors.Count());
+
+            foreach (var error in result.Errors)
+            {
+                AddError(error.Description);
+            }
+
+
+
+            return CustomResponse();
+
         }
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login(LoginUser loginUser)
         {
-			_logger.LogInformation("Begin login API");
+            _logger.LogInformation("Begin login API");
 
-			if (!ModelState.IsValid) return CustomResponse(ModelState);
-			_logger.LogInformation("ModelState is Valid");
+            if (!ModelState.IsValid) return CustomResponse(ModelState);
+            _logger.LogInformation("ModelState is Valid");
 
             var user = await _userManager.FindByEmailAsync(loginUser.Email);
             if (user == null)
             {
                 return StatusCode(StatusCodes.Status401Unauthorized);
             }
-                var result = await _signInManager.PasswordSignInAsync(loginUser.Email, loginUser.Password, false, true);
-			_logger.LogInformation("After PasswordSignInAsync");
+            var result = await _signInManager.PasswordSignInAsync(loginUser.Email, loginUser.Password, false, true);
+            _logger.LogInformation("After PasswordSignInAsync");
 
-			if (result.Succeeded)
+            if (result.Succeeded)
             {
-				_logger.LogInformation("result Succeeded");
+                _logger.LogInformation("result Succeeded");
 
-				var fullJwt = await GetFullJwt(user);
-				_logger.LogInformation("After GetFullJwt");
+                var fullJwt = await GetFullJwt(user);
+                _logger.LogInformation("After GetFullJwt");
 
-				return CustomResponse(fullJwt);
+                return CustomResponse(fullJwt);
             }
 
             if (result.IsLockedOut)
             {
-				_logger.LogInformation("result Is LockedOut");
+                _logger.LogInformation("result Is LockedOut");
 
-				AddError("This user is temporarily blocked");
+                AddError("This user is temporarily blocked");
                 return CustomResponse();
             }
 
@@ -173,20 +164,13 @@ namespace Employment.Services.Api.Controllers
             }
             catch (Exception EX)
             {
-
+                _logger.LogError(EX.Message,EX);
                 throw;
             }
-            //return new JwtBuilder()
-            //    .WithUserManager(_userManager)
-            //    .WithJwtSettings(_appJwtSettings)
-            //    .WithEmail(email)
-            //    .WithJwtClaims()
-            //    .WithUserClaims()
-            //    .WithUserRoles()
-            //    .BuildToken();
+           
 
         }
     }
 
 }
-    
+
