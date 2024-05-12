@@ -257,8 +257,8 @@ namespace Employment.Services.Api.Controllers
                     {
                         return Unauthorized();
                     }
-
-                    if (await _vacanciesApplicationService.ApplytoVacancy(userID, vacancyId))
+                    var result = await _vacanciesApplicationService.ApplytoVacancy(userID, vacancyId);
+                    if (result.Result)
                     {
                         return StatusCode(StatusCodes.Status200OK, true);
                     }
