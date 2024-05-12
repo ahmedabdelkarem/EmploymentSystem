@@ -263,7 +263,11 @@ namespace Employment.Application.Services
                     }
                 }
                 else
-                    response.MessageCodes = Enums.MessageCodes.Success;
+                {
+                    response.MessageCodes = Enums.MessageCodes.NoDataFound;
+                    response.Message = "Data not found";
+                }
+                    
             }
             catch (Exception Ex)
             {

@@ -34,7 +34,8 @@ namespace Employment.Infra.Data.Repository
         public T GetById(DbContext _context, int id)
         {
             var entity = _context.Find<T>(id);
-            _context.Entry(entity).State = EntityState.Detached;
+            if(entity != null)
+                _context.Entry(entity).State = EntityState.Detached;
             return entity;
         }
 

@@ -55,7 +55,11 @@ namespace Employment.Application.Services
                             response.MessageCodes = Enums.MessageCodes.Success;
                         }
                         else
-                            response.MessageCodes = Enums.MessageCodes.InternalServerError;
+                        {
+                            response.Result = false;
+                            response.MessageCodes = Enums.MessageCodes.BadRequest;
+                            response.Message = "Bad Request";
+                        }
 
                     }
                    
@@ -125,21 +129,21 @@ namespace Employment.Application.Services
                 var checkApplicationMaxTime = CheckApplicationMaxTime(userId);
                 var checkApplicationMaxNumber = _vacancyService.CheckApplicationMaxNumber(vacancyId);
 
-                if (!CheckApplicationExist(userId, vacancyId).Result)
+                if (!applicationExistResult.Result)
                 {
                     response.Result = applicationExistResult.Result;
                     response.MessageCodes = applicationExistResult.MessageCodes;
                     response.Message = applicationExistResult.Message;
                     return response;
                 }
-                else if (!CheckApplicationMaxTime(userId).Result)
+                else if (!checkApplicationMaxTime.Result)
                 {
                     response.Result = checkApplicationMaxTime.Result;
                     response.MessageCodes = checkApplicationMaxTime.MessageCodes;
                     response.Message = checkApplicationMaxTime.Message;
                     return response;
                 }
-                else if (!_vacancyService.CheckApplicationMaxNumber(vacancyId).Result)
+                else if (!checkApplicationMaxNumber.Result)
                 {
                     response.Result = checkApplicationMaxNumber.Result;
                     response.MessageCodes = checkApplicationMaxNumber.MessageCodes;

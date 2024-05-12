@@ -58,16 +58,19 @@ namespace Employment.Services.Api.Controllers
 
             };
 
-
-
             var result = await _userManager.CreateAsync(user, registerUser.Password);
-            var RoleInsertionresult = await _userManager.AddToRoleAsync(user, registerUser.RoleName);
-            if (result.Succeeded && RoleInsertionresult.Succeeded)
-            {
-                _logger.LogInformation("result Succeeded");
-                return CustomResponse(await GetFullJwt(user));
-            }
             _logger.LogInformation("After CreateAsync");
+
+            if (result.Succeeded)
+            {
+                var RoleInsertionresult = await _userManager.AddToRoleAsync(user, registerUser.RoleName);
+                if (RoleInsertionresult.Succeeded)
+                {
+                    _logger.LogInformation("result Succeeded");
+                    return CustomResponse(await GetFullJwt(user));
+                }
+
+            }
 
 
             _logger.LogInformation("Error count = " + result.Errors.Count());
@@ -79,9 +82,12 @@ namespace Employment.Services.Api.Controllers
 
 
 
-            return CustomResponse();
 
+
+            return CustomResponse();
         }
+
+
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login(LoginUser loginUser)
@@ -164,10 +170,10 @@ namespace Employment.Services.Api.Controllers
             }
             catch (Exception EX)
             {
-                _logger.LogError(EX.Message,EX);
+                _logger.LogError(EX.Message, EX);
                 throw;
             }
-           
+
 
         }
     }
