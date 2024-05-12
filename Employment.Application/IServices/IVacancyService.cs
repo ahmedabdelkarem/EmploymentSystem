@@ -16,8 +16,8 @@ namespace Employment.Application.IServices
         Task<ResponseModel<bool>> AddVacancy (VacancyDTO vacancyDTO);
         Task<ResponseModel<bool>> EditVacancy(VacancyDTO vacancyDTO);
         Task<ResponseModel<bool>> DeleteVacancy(int vacancyId);
-        Task<bool> PostVacancy(int vacancyId);
-        Task<bool> DeactivateVacancy(int vacancyId);
+		Task<ResponseModel<bool>> PostVacancy(int vacancyId);
+		Task<ResponseModel<bool>> DeactivateVacancy(int vacancyId);
 
         ResponseModel<bool> CheckApplicationMaxNumber(int vacancyId);
 

@@ -142,42 +142,67 @@ namespace Employment.Application.Services
             return response;
         }
 
-        public async Task<bool> DeactivateVacancy(int vacancyId)
+        public async Task<ResponseModel<bool>> DeactivateVacancy(int vacancyId)
         {
-            try
-            {
+			ResponseModel<bool> response = new ResponseModel<bool>() { Result = false };
+
+			try
+			{
                 if (vacancyId != 0)
                 {
-                    return await _vacancyRepository.DeactivateVacancy(vacancyId);
-                }
-                return false;
+                    var result = await _vacancyRepository.DeactivateVacancy(vacancyId);
+					if (result)
+					{
+						response.Result = true;
+						response.MessageCodes = Enums.MessageCodes.Success;
+					}
+					else
+					{
+						response.MessageCodes = Enums.MessageCodes.BadRequest;
+					}
+				}
 
             }
             catch (Exception Ex)
             {
                 _logger.LogError(Ex.Message);
-                throw;
-            }
-        }
+				response.MessageCodes = Enums.MessageCodes.InternalServerError;
+			}
+			return response;
 
-        public async Task<bool> PostVacancy(int vacancyId)
+		}
+
+		public async Task<ResponseModel<bool>> PostVacancy(int vacancyId)
         {
-            try
-            {
+			ResponseModel<bool> response = new ResponseModel<bool>() { Result = false };
+
+			try
+			{
                 if (vacancyId != 0)
                 {
-                    return await _vacancyRepository.PostVacancy(vacancyId);
-                }
-                return false;
+                    var result =  await _vacancyRepository.PostVacancy(vacancyId);
+					if (result)
+					{
+						response.Result = true;
+						response.MessageCodes = Enums.MessageCodes.Success;
+					}
+					else
+					{
+						response.MessageCodes = Enums.MessageCodes.BadRequest;
+					}
+
+				}
 
             }
             catch (Exception Ex)
             {
                 _logger.LogError(Ex.Message);
 
-                throw;
-            }
-        }
+				response.MessageCodes = Enums.MessageCodes.InternalServerError;
+			}
+			return response;
+
+		}
 
 
         public ResponseModel<bool> CheckApplicationMaxNumber(int vacancyId)
