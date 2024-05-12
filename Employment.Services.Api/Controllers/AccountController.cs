@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 using AutoMapper;
 using Employment.Domain.Entities;
 using Employment.Services.Api.Models;
@@ -12,6 +13,7 @@ using Microsoft.IdentityModel.Tokens;
 using NetDevPack.Identity.Jwt;
 using NetDevPack.Identity.Model;
 using StackExchange.Redis;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 using static StackExchange.Redis.Role;
 
 namespace Employment.Services.Api.Controllers
@@ -38,46 +40,57 @@ namespace Employment.Services.Api.Controllers
 
 		}
 
-		[HttpPost]
+        [HttpPost]
         [Route("register")]
         public async Task<ActionResult> Register(UserModel registerUser)
         {
-			_logger.LogInformation("Begin register API");
+            _logger.LogInformation("Begin register API");
 
-			if (!ModelState.IsValid) return CustomResponse(ModelState);
+            if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-			_logger.LogInformation("ModelState is Valid");
+            _logger.LogInformation("ModelState is Valid");
 
-			var user = new IdentityUser
+            var user = new IdentityUser
             {
                 UserName = registerUser.Email,
                 Email = registerUser.Email,
                 EmailConfirmed = true,
-                //Name = registerUser.Name,
-                //PhoneNumber = registerUser.PhoneNumber
+
             };
 
-            var result = await _userManager.CreateAsync(user, registerUser.Password);
-            var RoleInsertionresult = await _userManager.AddToRoleAsync(user, registerUser.RoleName);
-
-            _logger.LogInformation("After CreateAsync");
-
-			if (result.Succeeded && RoleInsertionresult.Succeeded)
+            using (TransactionScope Scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
-				_logger.LogInformation("result Succeeded");
+                try
+                {
+                    var result = await _userManager.CreateAsync(user, registerUser.Password);
+                    var RoleInsertionresult = await _userManager.AddToRoleAsync(user, registerUser.RoleName);
+                    if (result.Succeeded && RoleInsertionresult.Succeeded)
+                    {
+                        _logger.LogInformation("result Succeeded");
+                        Scope.Complete();
+                        return CustomResponse(await GetFullJwt(user));
+                    }
+                    Scope.Dispose();
+                    _logger.LogInformation("After CreateAsync");
 
-				return CustomResponse(await GetFullJwt(user));
+
+                    _logger.LogInformation("Error count = " + result.Errors.Count());
+
+                    foreach (var error in result.Errors)
+                    {
+                        AddError(error.Description);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    AddError(ex.Message);
+                    Scope.Dispose();
+                }
+
+
+                return CustomResponse();
             }
-			_logger.LogInformation("Error count = "+ result.Errors.Count() );
-
-			foreach (var error in result.Errors)
-            {
-                AddError(error.Description);
-            }
-
-            return CustomResponse();
         }
-
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login(LoginUser loginUser)
@@ -176,3 +189,4 @@ namespace Employment.Services.Api.Controllers
     }
 
 }
+    

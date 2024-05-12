@@ -4,9 +4,7 @@ namespace Employment.Services.Api.Models
 {
     public class UserModel
     {
-            //[Required]
-            //public string Name { get; set; }
-
+            
             [Required]
             [EmailAddress]
             public string Email { get; set; }
@@ -21,8 +19,6 @@ namespace Employment.Services.Api.Models
             [Required]
             public string RoleName { get; set; }
 
-            //[Phone]
-            //[Required]
-            //public string PhoneNumber { get; set; }
+           
     }
 }

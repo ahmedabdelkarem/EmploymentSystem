@@ -12,10 +12,12 @@ namespace Employment.Domain.Common
         {
             Success = 1,
             NoDataFound = 2,
-            BadRequest = 3,
-            InvalidMaxNumberOfApplication = 4,
-            InternalServerError =5,
-            ApplicationExistTodayWithSameApplicant = 6
+            DataFound=3,
+            BadRequest = 4,
+            InvalidMaxNumberOfApplication = 5,
+            InternalServerError =6,
+            ApplicationExistTodayWithSameApplicant = 7,
+            
 
         }
     }

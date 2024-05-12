@@ -22,8 +22,4 @@
     <ProjectReference Include="..\Employment.Domain\Employment.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Mappings\" />
-  </ItemGroup>
-
 </Project>
