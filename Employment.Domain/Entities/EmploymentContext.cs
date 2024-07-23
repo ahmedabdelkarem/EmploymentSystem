@@ -27,13 +27,6 @@ public partial class EmploymentContext : DbContext
 
     public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; }
 
-    public virtual DbSet<VacanciesApplication> VacanciesApplications { get; set; }
-
-    public virtual DbSet<VacanciesApplicationsArc> VacanciesApplicationsArcs { get; set; }
-
-    public virtual DbSet<VacanciesArc> VacanciesArcs { get; set; }
-
-    public virtual DbSet<Vacancy> Vacancies { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
@@ -214,83 +207,7 @@ public partial class EmploymentContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.AspNetUserTokens).HasForeignKey(d => d.UserId);
         });
 
-        modelBuilder.Entity<VacanciesApplication>(entity =>
-        {
-            entity.HasIndex(e => e.FkApplicantId, "IX_VacanciesApplications_Fk_ApplicantId");
-
-            entity.HasIndex(e => e.FkVacancyId, "IX_VacanciesApplications_Fk_VacancyId");
-
-            entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.ApplicationDate).HasColumnType("datetime");
-            entity.Property(e => e.FkApplicantId)
-                .IsRequired()
-                .HasMaxLength(100)
-                .IsUnicode(false)
-                .HasColumnName("Fk_ApplicantId");
-            entity.Property(e => e.FkVacancyId).HasColumnName("Fk_VacancyId");
-
-            entity.HasOne(d => d.FkApplicant).WithMany(p => p.VacanciesApplications)
-                .HasForeignKey(d => d.FkApplicantId)
-                .HasConstraintName("FK_VacanciesApplications_AspNetUsers");
-
-            entity.HasOne(d => d.FkVacancy).WithMany(p => p.VacanciesApplications)
-                .HasForeignKey(d => d.FkVacancyId)
-                .HasConstraintName("FK_VacanciesApplications_Vacancies");
-        });
-
-        modelBuilder.Entity<VacanciesApplicationsArc>(entity =>
-        {
-            entity.ToTable("VacanciesApplications_ARC");
-
-            entity.HasIndex(e => e.FkApplicantId, "IX_VacanciesApplications_ARC_Fk_ApplicantId");
-
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("ID");
-            entity.Property(e => e.ApplicationDate).HasColumnType("datetime");
-            entity.Property(e => e.FkApplicantId)
-                .IsRequired()
-                .HasMaxLength(100)
-                .IsUnicode(false)
-                .HasColumnName("Fk_ApplicantId");
-            entity.Property(e => e.FkVacancyId).HasColumnName("Fk_VacancyId");
-
-            entity.HasOne(d => d.FkApplicant).WithMany(p => p.VacanciesApplicationsArcs)
-                .HasForeignKey(d => d.FkApplicantId)
-                .HasConstraintName("FK_VacanciesApplications_AspNetUsers_ARC");
-        });
-
-        modelBuilder.Entity<VacanciesArc>(entity =>
-        {
-            entity.ToTable("Vacancies_ARC");
-
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("ID");
-            entity.Property(e => e.ExpirationDate).HasColumnType("datetime");
-            entity.Property(e => e.StartDate).HasColumnType("datetime");
-            entity.Property(e => e.VacancyName)
-                .IsRequired()
-                .HasMaxLength(200);
-        });
-
-        modelBuilder.Entity<Vacancy>(entity =>
-        {
-            entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.CreatedBy)
-                .HasMaxLength(100)
-                .IsUnicode(false);
-            entity.Property(e => e.CurrentNumberOfApplication).HasDefaultValueSql("((0))");
-            entity.Property(e => e.ExpirationDate).HasColumnType("datetime");
-            entity.Property(e => e.StartDate).HasColumnType("datetime");
-            entity.Property(e => e.VacancyName)
-                .IsRequired()
-                .HasMaxLength(200);
-
-            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.Vacancies)
-                .HasForeignKey(d => d.CreatedBy)
-                .HasConstraintName("FK_Vacancies_AspNetUsers");
-        });
+  
 
         OnModelCreatingPartial(modelBuilder);
     }

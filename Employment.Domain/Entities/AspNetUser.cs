@@ -46,11 +46,5 @@ public partial class AspNetUser : IdentityUser
 
     public virtual ICollection<AspNetUserToken> AspNetUserTokens { get; set; } = new List<AspNetUserToken>();
 
-    public virtual ICollection<Vacancy> Vacancies { get; set; } = new List<Vacancy>();
-
-    public virtual ICollection<VacanciesApplication> VacanciesApplications { get; set; } = new List<VacanciesApplication>();
-
-    public virtual ICollection<VacanciesApplicationsArc> VacanciesApplicationsArcs { get; set; } = new List<VacanciesApplicationsArc>();
-
     public virtual ICollection<AspNetRole> Roles { get; set; } = new List<AspNetRole>();
 }

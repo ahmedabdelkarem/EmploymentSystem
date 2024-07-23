@@ -87,14 +87,10 @@ builder.Services.AddAuthorization();
 
 //Services
 builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IVacancyService, VacancyService>();
-builder.Services.AddScoped<IVacanciesApplicationService, VacanciesApplicationService>();
 builder.Services.AddScoped<ICacheService, CacheService>();
 
 // Infra - Data
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IVacancyRepository, VacancyRepository>();
-builder.Services.AddScoped<IVacanciesApplicationRepository, VacanciesApplicationRepository>();
 builder.Services.AddScoped<IdentityEmploymentContext>();
 
 //DBContext
