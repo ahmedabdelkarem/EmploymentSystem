@@ -14,9 +14,7 @@ namespace Employment.Domain.Common
             NoDataFound = 2,
             DataFound=3,
             BadRequest = 4,
-            InvalidMaxNumberOfApplication = 5,
-            InternalServerError =6,
-            ApplicationExistTodayWithSameApplicant = 7,
+            UserAlreadyExists = 5
             
 
         }
